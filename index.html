@@ -206,20 +206,33 @@
     const radius = Math.min(window.innerWidth, window.innerHeight) / 2;
     const geometry = new THREE.SphereGeometry(radius, 64, 64);
     const material = new THREE.MeshBasicMaterial({
-      color: 0x3872EC,
+      color: 0x4169E1,
       wireframe: true,
       transparent: true,
-      opacity: 0.085
+      opacity: 0.08
     });
     const globe = new THREE.Mesh(geometry, material);
     scene.add(globe);
 
     camera.position.z = radius * 1.5;
 
-    function animate() {
+    // Array of colors for the globe
+    const colors = [0x4169E1, 0x00FF00, 0x8A2BE2, 0xFF1493, 0xFFD700];
+    let colorIndex = 0;
+    let lastColorChange = 0;
+
+    function animate(time) {
       requestAnimationFrame(animate);
       globe.rotation.x += 0.0005;
       globe.rotation.y += 0.001;
+
+      // Change color every 3 seconds
+      if (time - lastColorChange > 3000) {
+        colorIndex = (colorIndex + 1) % colors.length;
+        globe.material.color.setHex(colors[colorIndex]);
+        lastColorChange = time;
+      }
+
       renderer.render(scene, camera);
     }
     animate();
