@@ -103,6 +103,37 @@
     .button-details {
       font-size: 14px;
     }
+
+    .divider {
+      border-top: 1px solid #3872EC;
+      margin: 30px 0;
+      opacity: 0.5;
+    }
+
+    .info-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .info-button {
+      background-color: transparent;
+      color: #3872EC;
+      border: 2px solid #3872EC;
+      padding: 10px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      font-weight: bold;
+      border-radius: 5px;
+    }
+
+    .info-button:hover {
+      background-color: #3872EC;
+      color: #000000;
+      box-shadow: 0 0 10px #3872EC;
+    }
   </style>
 </head>
 
@@ -112,7 +143,8 @@
     <div class="emoji-line">🌏🤓💻🚀👩‍💻</div>
     <div class="description">
       <p>
-        A network of community-run groups of indie makers / coders / designers / hardware hackers who build their own independent
+        A network of community-run groups of indie makers / coders / designers / hardware hackers who build their own
+        independent
         apps/startups, meeting up every Thursday for weekly co-working (and demos) all around the world.
       </p>
     </div>
@@ -141,6 +173,11 @@
         <div class="button-title">Hackaigon 🇻🇳</div>
         <div class="button-details">Ho Chi Minh City | Est. 2024</div>
       </a>
+    </div>
+    <div class="divider"></div>
+    <div class="info-buttons">
+      <a href="https://github.com/hacka-network/hacka.network/blob/main/hackafesto.md" class="info-button">Hackafesto</a>
+      <a href="https://github.com/hacka-network/hacka.network/blob/main/hackanew.md" class="info-button">Start a Chapter</a>
     </div>
   </div>
 </body>
