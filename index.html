@@ -7,6 +7,7 @@
   <title>hacka.network</title>
   <link rel="icon" type="image/png" href="favicon.png">
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <style>
     body {
       font-family: 'IBM Plex Mono', monospace;
@@ -18,25 +19,38 @@
       flex-direction: column;
       align-items: center;
       line-height: 1.6;
+      overflow: hidden;
+    }
+
+    #globe-background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
     }
 
     .container {
       max-width: 800px;
       width: 100%;
+      position: relative;
+      z-index: 1;
     }
 
     .logo {
-      font-size: 48px;
+      font-size: 56px;
+      line-height: 56px;
       font-weight: bold;
       text-align: center;
-      margin-bottom: 20px;
+      margin-bottom: 40px;
       text-shadow: 0 0 10px #3872EC;
     }
 
     .emoji-line {
       text-align: center;
       font-size: 24px;
-      margin-bottom: 20px;
+      margin-bottom: 40px;
     }
 
     h1,
@@ -47,7 +61,7 @@
 
     .description {
       text-align: left;
-      margin-bottom: 30px;
+      margin-bottom: 40px;
       opacity: 0.8;
     }
 
@@ -55,7 +69,7 @@
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       gap: 20px;
-      margin-bottom: 30px;
+      margin-bottom: 40px;
     }
 
     .button {
@@ -106,7 +120,7 @@
 
     .divider {
       border-top: 1px solid #3872EC;
-      margin: 30px 0;
+      margin: 40px 0;
       opacity: 0.5;
     }
 
@@ -138,6 +152,7 @@
 </head>
 
 <body>
+  <canvas id="globe-background"></canvas>
   <div class="container">
     <div class="logo">HACKA*</div>
     <div class="emoji-line">🌏🤓💻🚀👩‍💻</div>
@@ -180,6 +195,46 @@
       <a href="https://github.com/hacka-network/hacka.network/blob/main/hackanew.md" class="info-button">Start a Chapter</a>
     </div>
   </div>
+
+  <script>
+    // Globe animation
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('globe-background'), alpha: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
+    const radius = Math.min(window.innerWidth, window.innerHeight) / 2;
+    const geometry = new THREE.SphereGeometry(radius, 64, 64);
+    const material = new THREE.MeshBasicMaterial({
+      color: 0x3872EC,
+      wireframe: true,
+      transparent: true,
+      opacity: 0.085
+    });
+    const globe = new THREE.Mesh(geometry, material);
+    scene.add(globe);
+
+    camera.position.z = radius * 1.5;
+
+    function animate() {
+      requestAnimationFrame(animate);
+      globe.rotation.x += 0.0005;
+      globe.rotation.y += 0.001;
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    function onWindowResize() {
+      const newRadius = Math.min(window.innerWidth, window.innerHeight) / 2;
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      globe.geometry = new THREE.SphereGeometry(newRadius, 64, 64);
+      camera.position.z = newRadius * 1.5;
+    }
+
+    window.addEventListener('resize', onWindowResize);
+  </script>
 </body>
 
 </html>
