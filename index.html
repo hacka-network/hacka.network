@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>hacka.network</title>
   <link rel="icon" type="image/png" href="favicon.png">
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;700&family=Press+Start+2P&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <style>
     body {
@@ -39,12 +39,12 @@
     }
 
     .logo {
-      font-size: 56px;
-      line-height: 56px;
-      font-weight: bold;
+      font-family: 'Press Start 2P', cursive;
+      font-size: 48px;
+      line-height: 60px;
+      font-weight: normal;
       text-align: center;
       margin-bottom: 40px;
-      /* text-shadow: 0 0 10px #3872EC; */
     }
 
     .emoji-line {
@@ -206,7 +206,7 @@
     const radius = Math.min(window.innerWidth, window.innerHeight) / 2;
     const geometry = new THREE.SphereGeometry(radius, 64, 64);
     const material = new THREE.MeshBasicMaterial({
-      color: 0xFFD700,
+      color: 0x87CEEB,
       wireframe: true,
       transparent: true,
       opacity: 0.05
