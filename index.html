@@ -19,7 +19,8 @@
       flex-direction: column;
       align-items: center;
       line-height: 1.6;
-      overflow: hidden;
+      overflow-y: auto; /* Change from hidden to auto */
+      min-height: 100vh; /* Ensure full viewport height */
     }
 
     #globe-background {
@@ -128,6 +129,7 @@
       display: flex;
       justify-content: center;
       gap: 20px;
+      flex-wrap: wrap; /* Allow buttons to wrap on smaller screens */
     }
 
     .info-button {
@@ -141,12 +143,25 @@
       text-decoration: none;
       font-weight: bold;
       border-radius: 5px;
+      margin-bottom: 10px; /* Add space between wrapped buttons */
     }
 
     .info-button:hover {
       background-color: #3872EC;
       color: #000000;
       box-shadow: 0 0 10px #3872EC;
+    }
+
+    @media (max-width: 600px) {
+      .info-buttons {
+        flex-direction: column; /* Stack buttons vertically on small screens */
+        align-items: center;
+      }
+
+      .info-button {
+        width: 100%; /* Full width on small screens */
+        max-width: 300px; /* Limit maximum width */
+      }
     }
   </style>
 </head>
@@ -234,6 +249,9 @@
     }
 
     window.addEventListener('resize', onWindowResize);
+
+    // Ensure initial sizing is correct
+    onWindowResize();
   </script>
 </body>
 
