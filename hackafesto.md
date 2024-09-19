@@ -1,3 +1,4 @@
+```text
                   _                    _                      _    
   /\  /\__ _  ___| | ____ _ _ __   ___| |___      _____  _ __| | __
  / /_/ / _` |/ __| |/ / _` | '_ \ / _ \ __\ \ /\ / / _ \| '__| |/ /
@@ -21,3 +22,4 @@ Welcome to HackaNetwork, where creators unite! We're a global community of indie
 HackaNetwork is about inspiration, motivation, accountability, and belonging. We know that building independently can be challenging, but together, we're unstoppable. Let's support each other, learn from one another, and create a vibrant community where everyone thrives.
 
 Join us, build with us, and let's make magic happen every Thursday!
+```
