@@ -50,3 +50,7 @@ Dedicate yourself to the ongoing management of your Node, by making sure both th
 As you grow, it should naturally begin to self-organize – this is part of the hacker spirit :)
 
 By following these steps, you can successfully launch a Hacka* Node, creating a vibrant community of innovators and independent creators in your area. Hurray! Welcome to the network!
+
+## 8. Add your node to the site
+
+Add your meetup details here https://github.com/hacka-network/hacka.network/blob/main/index.html and submit a Pull Request.
