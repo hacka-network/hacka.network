@@ -174,11 +174,36 @@
       background-color: #3872EC;
       color: #000000;
     }
+
+    .github-icon {
+      box-sizing: border-box;
+      display: block;
+      max-width: 100%;
+      position: fixed;
+      right: 1rem;
+      top: 1rem;
+      color: transparent;
+      z-index: 2;
+      transition: opacity 0.3s ease;
+    }
+
+    .github-icon:hover {
+      opacity: 0.5;
+    }
+
+    @media (max-width: 768px) {
+      .github-icon {
+        display: none;
+      }
+    }
   </style>
 </head>
 
 <body>
   <canvas id="globe-background"></canvas>
+  <a href="https://github.com/hacka-network/hacka.network" target="_blank" class="github-icon">
+    <img alt="Edit this on GitHub" width="30" height="30" src="github.svg">
+  </a>
   <div class="container">
     <div class="logo">HACKA*</div>
     <div class="emoji-line">🌏🤓💻🚀👩‍💻</div>
