@@ -1,2 +1,7 @@
 # hacka.network
-The website
+
+🌎 https://hacka.network
+
+Pull requests are welcome!
+
+Open analytics: https://dashboard.simpleanalytics.com/hacka.network
