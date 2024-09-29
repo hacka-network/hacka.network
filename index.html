@@ -6,7 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>hacka.network</title>
   <link rel="icon" type="image/png" href="favicon.png">
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;700&family=Press+Start+2P&display=swap"
+    rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <style>
     body {
@@ -19,8 +20,10 @@
       flex-direction: column;
       align-items: center;
       line-height: 1.6;
-      overflow-y: auto; /* Change from hidden to auto */
-      min-height: 100vh; /* Ensure full viewport height */
+      overflow-y: auto;
+      /* Change from hidden to auto */
+      min-height: 100vh;
+      /* Ensure full viewport height */
     }
 
     #globe-background {
@@ -129,7 +132,8 @@
       display: flex;
       justify-content: center;
       gap: 20px;
-      flex-wrap: wrap; /* Allow buttons to wrap on smaller screens */
+      flex-wrap: wrap;
+      /* Allow buttons to wrap on smaller screens */
     }
 
     .info-button {
@@ -143,7 +147,8 @@
       text-decoration: none;
       font-weight: bold;
       border-radius: 5px;
-      margin-bottom: 10px; /* Add space between wrapped buttons */
+      margin-bottom: 10px;
+      /* Add space between wrapped buttons */
     }
 
     .info-button:hover {
@@ -154,13 +159,16 @@
 
     @media (max-width: 600px) {
       .info-buttons {
-        flex-direction: column; /* Stack buttons vertically on small screens */
+        flex-direction: column;
+        /* Stack buttons vertically on small screens */
         align-items: center;
       }
 
       .info-button {
-        width: 100%; /* Full width on small screens */
-        max-width: 300px; /* Limit maximum width */
+        width: 100%;
+        /* Full width on small screens */
+        max-width: 300px;
+        /* Limit maximum width */
       }
     }
 
@@ -251,58 +259,58 @@
         <div class="button-title">Hackapura 🇸🇬</div>
         <div class="button-details">Singapore | Est. 2024</div>
       </a>
+      <a href="https://hackalin.com" class="button">
+        <div class="button-title">Hackalin 🇩🇪</div>
+        <div class="button-details">Berlin | Est. 2024</div>
+      </a>
     </div>
-    <div class="divider"></div>
-    <div class="info-buttons">
-      <a href="https://github.com/hacka-network/hacka.network/blob/main/hackafesto.md" class="info-button">Hackafesto</a>
-      <a href="https://github.com/hacka-network/hacka.network/blob/main/hackanew.md" class="info-button">+ Add a Node</a>
-    </div>
-  </div>
 
-  <script>
-    // Globe animation
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('globe-background'), alpha: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
 
-    const radius = Math.min(window.innerWidth, window.innerHeight) / 2;
-    const geometry = new THREE.SphereGeometry(radius, 64, 64);
-    const material = new THREE.MeshBasicMaterial({
-      color: 0x87CEEB,
-      wireframe: true,
-      transparent: true,
-      opacity: 0.05
-    });
-    const globe = new THREE.Mesh(geometry, material);
-    scene.add(globe);
-
-    camera.position.z = radius * 1.5;
-
-    function animate() {
-      requestAnimationFrame(animate);
-      globe.rotation.x += 0.0005;
-      globe.rotation.y += 0.001;
-      renderer.render(scene, camera);
-    }
-    animate();
-
-    function onWindowResize() {
-      const newRadius = Math.min(window.innerWidth, window.innerHeight) / 2;
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
+    <script>
+      // Globe animation
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+      const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('globe-background'), alpha: true });
       renderer.setSize(window.innerWidth, window.innerHeight);
-      globe.geometry = new THREE.SphereGeometry(newRadius, 64, 64);
-      camera.position.z = newRadius * 1.5;
-    }
 
-    window.addEventListener('resize', onWindowResize);
+      const radius = Math.min(window.innerWidth, window.innerHeight) / 2;
+      const geometry = new THREE.SphereGeometry(radius, 64, 64);
+      const material = new THREE.MeshBasicMaterial({
+        color: 0x87CEEB,
+        wireframe: true,
+        transparent: true,
+        opacity: 0.05
+      });
+      const globe = new THREE.Mesh(geometry, material);
+      scene.add(globe);
 
-    // Ensure initial sizing is correct
-    onWindowResize();
-  </script>
-  <script async defer src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
-  <noscript><img src="https://queue.simpleanalyticscdn.com/noscript.gif" alt="" referrerpolicy="no-referrer-when-downgrade" /></noscript>
+      camera.position.z = radius * 1.5;
+
+      function animate() {
+        requestAnimationFrame(animate);
+        globe.rotation.x += 0.0005;
+        globe.rotation.y += 0.001;
+        renderer.render(scene, camera);
+      }
+      animate();
+
+      function onWindowResize() {
+        const newRadius = Math.min(window.innerWidth, window.innerHeight) / 2;
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        globe.geometry = new THREE.SphereGeometry(newRadius, 64, 64);
+        camera.position.z = newRadius * 1.5;
+      }
+
+      window.addEventListener('resize', onWindowResize);
+
+      // Ensure initial sizing is correct
+      onWindowResize();
+    </script>
+    <script async defer src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
+    <noscript><img src="https://queue.simpleanalyticscdn.com/noscript.gif" alt=""
+        referrerpolicy="no-referrer-when-downgrade" /></noscript>
 </body>
 
 </html>
