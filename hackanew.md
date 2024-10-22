@@ -30,6 +30,7 @@ Create a dedicated website for your Node using the provided template (we let you
 
 Keep public/online promotion minimal to maintain the Node's culture and values (again, we have experience with this, it's the best approach generally). Carefully considering these will help to grow slow, stable and steadily and will help you with sticking to our hackafesto. 
 It's best to invite people 1-on-1 if you feel like they're a good fit. Public promotions should be rare and carefully considered to maintain our culture. 
+If someone is a bad fit, carries out illegal activities, or harms other participants, you may exclude them from the meetup and communication channels. Try to do so by privately communicating that Hacka* is not a good fit for them.
 
 During step 2 we'll also explain this, but we need you to establish a Telegram group to facilitate communication within your community. This is one of the most essential parts.
 
