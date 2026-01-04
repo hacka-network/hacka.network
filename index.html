@@ -6,15 +6,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Hacka*</title>
   <link rel="icon" type="image/png" href="favicon.png">
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&family=Press+Start+2P&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <style>
     body {
       font-family: 'IBM Plex Mono', monospace;
+      font-weight: 500;
       background-color: #000000;
       color: #3872EC;
       margin: 0;
-      padding: 60px 20px 20px;
+      padding: 60px 20px 60px;
+      overflow-x: hidden;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -113,10 +115,13 @@
     .button-title {
       font-size: 18px;
       font-weight: bold;
+      color: #6BA3FF;
+      margin-bottom: 6px;
     }
 
     .button-details {
       font-size: 14px;
+      margin-bottom: 6px;
     }
 
     .divider {
@@ -167,6 +172,183 @@
         width: 100%; /* Full width on small screens */
         max-width: 300px; /* Limit maximum width */
       }
+
+      .people-table {
+        font-size: 12px;
+      }
+
+      .people-table th,
+      .people-table td {
+        padding: 6px 4px;
+      }
+
+      .person-nodes {
+        font-size: 11px;
+        word-break: break-word;
+      }
+
+      .person-bio td {
+        font-size: 10px;
+      }
+    }
+
+    /* People table styles */
+    .people-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .people-table th,
+    .people-table td {
+      text-align: left;
+      padding: 10px;
+      border-bottom: 1px solid rgba(56, 114, 236, 0.3);
+    }
+
+    .people-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .people-table th {
+      opacity: 0.7;
+      font-weight: normal;
+      font-size: 14px;
+    }
+
+    .people-table a {
+      color: #3872EC;
+      text-decoration: none;
+    }
+
+    .people-table a:hover {
+      text-decoration: underline;
+    }
+
+    .node-emojis {
+      font-size: 18px;
+    }
+
+    .person-nodes {
+      font-size: 13px;
+      opacity: 0.8;
+    }
+
+    .node-item {
+      white-space: nowrap;
+    }
+
+    .node-attending {
+      color: #22c55e;
+      font-weight: bold;
+    }
+
+    /* Activity indicator */
+    .activity-indicator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 18px;
+    }
+
+    .activity-dots {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .activity-dots.high {
+      color: #22c55e;
+    }
+
+    .activity-dots.medium {
+      color: #f97316;
+    }
+
+    .activity-dots.low {
+      color: #ef4444;
+    }
+
+    .activity-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    /* People section */
+    #people-container {
+      margin-top: 40px;
+    }
+
+    .people-section-title {
+      font-size: 18px;
+      margin-bottom: 15px;
+      opacity: 0.8;
+    }
+
+    .people-filters {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .people-filters select,
+    .people-filters input {
+      background: #000;
+      color: #3872EC;
+      border: 1px solid #3872EC;
+      padding: 8px 12px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 14px;
+      border-radius: 5px;
+    }
+
+    .people-filters select {
+      cursor: pointer;
+      padding: 8px 24px 8px 16px;
+    }
+
+    .people-filters input {
+      flex: 1;
+      min-width: 150px;
+    }
+
+    .people-filters input::placeholder {
+      color: rgba(56, 114, 236, 0.5);
+    }
+
+    .people-filters select:focus,
+    .people-filters input:focus {
+      outline: none;
+      box-shadow: 0 0 5px #3872EC;
+    }
+
+    .people-filters select option {
+      padding: 8px;
+    }
+
+    .person-bio td {
+      font-size: 12px;
+      opacity: 0.6;
+      font-weight: 600;
+      padding-top: 2px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(56, 114, 236, 0.3);
+    }
+
+    .person-main-row td {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .activity-indicator {
+      cursor: help;
+    }
+
+    .attendee-count {
+      font-size: 12px;
+      font-weight: 500;
     }
 
     /* Add styles for text selection */
@@ -218,65 +400,18 @@
         independent apps/startups, meeting up every Thursday for weekly co-working (and demos) all around the world.
       </p>
     </div>
-    <div class="button-container">
-      <a href="https://hackagu.org" class="button">
-        <div class="button-title">Hackagu 🇮🇩</div>
-        <div class="button-details">Canggu, Bali | Est. 2019</div>
-      </a>
-      <a href="https://hackumvit.com" class="button">
-        <div class="button-title">Hackumvit 🇹🇭</div>
-        <div class="button-details">Bangkok | Est. 2022</div>
-      </a>
-      <a href="https://hackaditch.com" class="button">
-        <div class="button-title">Hackaditch 🇬🇧</div>
-        <div class="button-details">Shoreditch, London | Est. 2024</div>
-      </a>
-      <a href="https://hackamai.com" class="button">
-        <div class="button-title">Hackamai 🇹🇭</div>
-        <div class="button-details">Chiang Mai, Thailand | Est. 2024</div>
-      </a>
-      <a href="https://hackawatu.com" class="button">
-        <div class="button-title">Hackawatu 🇮🇩</div>
-        <div class="button-details">Uluwatu, Bali | Est. 2024</div>
-      </a>
-      <a href="https://tally.so/r/mDJ2V5" class="button">
-        <div class="button-title">Hackaigon 🇻🇳</div>
-        <div class="button-details">Ho Chi Minh City, Vietnam | Est. 2024</div>
-      </a>
-      <a href="https://tally.so/r/3XXRbV" class="button">
-        <div class="button-title">Hackanang 🇻🇳</div>
-        <div class="button-details">Da Nang, Vietnam | Est. 2025</div>
-      </a>
-      <!-- <a href="https://hackapura.com/" class="button">
-        <div class="button-title">Hackapura 🇸🇬</div>
-        <div class="button-details">Singapore | Est. 2023</div>
-      </a> -->
-      <!-- <a href="https://hackalumpur.com" class="button">
-        <div class="button-title">Hackalumpur 🇲🇾</div>
-        <div class="button-details">Kuala Lumpur | Est. 2024</div>
-      </a> -->
-      <a href="https://hackayork.com" class="button">
-        <div class="button-title">Hackayork 🇺🇸</div>
-        <div class="button-details">New York | Est. 2025</div>
-      </a>
-      <a href="https://hackaseoul.com" class="button">
-        <div class="button-title">Hackaseoul 🇰🇷</div>
-        <div class="button-details">Seoul | Est. 2025</div>
-      </a>
-      <a href="https://hackadam.nl" class="button">
-        <div class="button-title">Hackadam 🇳🇱</div>
-        <div class="button-details">Amsterdam | Est. 2025</div>
-      </a>
-      <a href="https://hackaboa.com" class="button">
-        <div class="button-title">Hackaboa 🇵🇹</div>
-        <div class="button-details">Lisbon | Est. 2025</div>
-      </a>
+    <div class="button-container" id="nodes-container">
+      <!-- Nodes loaded dynamically from API -->
     </div>
     <div class="divider"></div>
     <div class="info-buttons">
       <a href="https://x.com/hackanetwork" class="info-button">Follow on X</a>
       <a href="https://hackagu.com/origins" class="info-button">Origins</a>
       <a href="https://github.com/hacka-network/hacka.network/blob/main/hackanew.md" class="info-button-bold">+ Add a Node</a>
+    </div>
+    <div class="divider"></div>
+    <div id="people-container">
+      <!-- People loaded dynamically from API -->
     </div>
   </div>
 
@@ -321,6 +456,161 @@
 
     // Ensure initial sizing is correct
     onWindowResize();
+
+    // Fetch and render nodes and people from API
+    async function loadData() {
+      const nodesContainer = document.getElementById('nodes-container');
+      const peopleContainer = document.getElementById('people-container');
+
+      try {
+        //const response = await fetch('http://localhost:8089/api/nodes/');
+        const response = await fetch('https://bot.hacka.network/api/nodes/');
+        const data = await response.json();
+
+        // Create a lookup map for node IDs to their details
+        const nodeMap = {};
+        data.nodes.forEach(node => {
+          nodeMap[node.id] = node;
+        });
+
+        // Count attendees per node
+        const attendeeCounts = {};
+        data.people.forEach(person => {
+          person.nodes.forEach(n => {
+            if (n.attending) {
+              attendeeCounts[n.id] = (attendeeCounts[n.id] || 0) + 1;
+            }
+          });
+        });
+
+        // Render nodes
+        nodesContainer.innerHTML = data.nodes.map(node => {
+          let activityClass = 'low';
+          if (node.activity_level > 7) {
+            activityClass = 'high';
+          } else if (node.activity_level > 3) {
+            activityClass = 'medium';
+          }
+
+          const dots = node.activity_level > 0
+            ? '<span class="activity-dot"></span>'.repeat(node.activity_level)
+            : '';
+
+          const attendeeCount = attendeeCounts[node.id] || 0;
+          const attendeeText = attendeeCount > 0
+            ? `<span class="attendee-count">${attendeeCount} coming this week</span>`
+            : '';
+
+          return `
+            <a href="${node.url}" class="button">
+              <div class="button-title">${node.name} ${node.emoji}</div>
+              <div class="button-details">${node.location} · Est. ${node.established}</div>
+              <div class="activity-indicator" title="Activity level based on recent attendance">
+                ${dots ? `<span class="activity-dots ${activityClass}">${dots}</span>` : ''}
+                ${attendeeText}
+              </div>
+            </a>
+          `;
+        }).join('');
+
+        // Store people data for filtering
+        window.peopleData = data.people;
+        window.nodeMap = nodeMap;
+        window.nodesData = data.nodes;
+
+        // Build filter options (using em spaces for better spacing after emoji)
+        const filterOptions = data.nodes.map(node =>
+          `<option value="${node.id}">${node.emoji}\u2003\u2003${node.name}</option>`
+        ).join('');
+
+        peopleContainer.innerHTML = `
+          <div class="people-section-title">People</div>
+          <div class="people-filters">
+            <select id="node-filter-select">
+              <option value="">All Nodes</option>
+              ${filterOptions}
+            </select>
+            <input type="text" id="people-search" placeholder="Search...">
+          </div>
+          <table class="people-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>X</th>
+                <th>Nodes</th>
+              </tr>
+            </thead>
+            <tbody id="people-tbody">
+            </tbody>
+          </table>
+        `;
+
+        // Render people function
+        function renderPeople() {
+          const filterNodeId = document.getElementById('node-filter-select').value;
+          const searchText = document.getElementById('people-search').value.toLowerCase();
+
+          let filteredPeople = window.peopleData;
+
+          if (filterNodeId) {
+            filteredPeople = filteredPeople.filter(p => p.nodes.some(n => n.id === filterNodeId));
+          }
+
+          if (searchText) {
+            filteredPeople = filteredPeople.filter(p =>
+              p.display_name.toLowerCase().includes(searchText) ||
+              (p.username_x && p.username_x.toLowerCase().includes(searchText))
+            );
+          }
+
+          const peopleRows = filteredPeople.map(person => {
+            const xLink = person.username_x
+              ? `<a href="https://x.com/${person.username_x}" target="_blank">@${person.username_x}</a>`
+              : '';
+
+            const nodesList = person.nodes
+              .map(n => {
+                const node = window.nodeMap[n.id];
+                if (!node) return '';
+                const text = `${node.emoji}&nbsp;${node.name}`;
+                return n.attending
+                  ? `<span class="node-attending node-item">${text}</span>`
+                  : `<span class="node-item">${text}</span>`;
+              })
+              .filter(Boolean)
+              .join(', ');
+
+            const bioRow = person.bio
+              ? `<tr class="person-bio"><td colspan="3">${person.bio}</td></tr>`
+              : '';
+
+            return `
+              <tr${person.bio ? ' class="person-main-row"' : ''}>
+                <td>${person.display_name}</td>
+                <td>${xLink}</td>
+                <td class="person-nodes">${nodesList}</td>
+              </tr>
+              ${bioRow}
+            `;
+          }).join('');
+
+          document.getElementById('people-tbody').innerHTML = peopleRows;
+        }
+
+        // Initial render
+        renderPeople();
+
+        // Add filter event listeners
+        document.getElementById('node-filter-select').addEventListener('change', renderPeople);
+        document.getElementById('people-search').addEventListener('input', renderPeople);
+      } catch (error) {
+        console.error('Failed to load data:', error);
+        nodesContainer.innerHTML = '<p>Failed to load nodes</p>';
+        peopleContainer.innerHTML = '';
+      }
+    }
+
+    loadData();
   </script>
   <script async defer src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
   <noscript><img src="https://queue.simpleanalyticscdn.com/noscript.gif" alt="" referrerpolicy="no-referrer-when-downgrade" /></noscript>
