@@ -483,6 +483,14 @@
         .replace(/'/g, '&#39;');
     }
 
+    // Decode HTML entities (for API data that comes pre-encoded)
+    function decodeHtml(html) {
+      if (html == null) return '';
+      const txt = document.createElement('textarea');
+      txt.innerHTML = html;
+      return txt.value;
+    }
+
     // Validate and sanitize X username (only allow valid characters)
     function sanitizeUsername(username) {
       if (!username) return '';
@@ -622,21 +630,33 @@
               .filter(Boolean)
               .join(', ');
 
-            const bioRow = person.bio
-              ? `<tr class="person-bio"><td colspan="3">${escapeHtml(person.bio)}</td></tr>`
-              : '';
+            return {
+              mainRow: `
+                <tr${person.bio ? ' class="person-main-row"' : ''}>
+                  <td>${escapeHtml(person.display_name)}</td>
+                  <td>${xLink}</td>
+                  <td class="person-nodes">${nodesList}</td>
+                </tr>
+              `,
+              bio: person.bio || null
+            };
+          });
 
-            return `
-              <tr${person.bio ? ' class="person-main-row"' : ''}>
-                <td>${escapeHtml(person.display_name)}</td>
-                <td>${xLink}</td>
-                <td class="person-nodes">${nodesList}</td>
-              </tr>
-              ${bioRow}
-            `;
-          }).join('');
+          const tbody = document.getElementById('people-tbody');
+          tbody.innerHTML = '';
 
-          document.getElementById('people-tbody').innerHTML = peopleRows;
+          peopleRows.forEach(({ mainRow, bio }) => {
+            tbody.insertAdjacentHTML('beforeend', mainRow);
+            if (bio) {
+              const bioTr = document.createElement('tr');
+              bioTr.className = 'person-bio';
+              const bioTd = document.createElement('td');
+              bioTd.colSpan = 3;
+              bioTd.textContent = decodeHtml(bio);
+              bioTr.appendChild(bioTd);
+              tbody.appendChild(bioTr);
+            }
+          });
         }
 
         // Initial render
