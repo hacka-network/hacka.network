@@ -457,13 +457,31 @@
     // Ensure initial sizing is correct
     onWindowResize();
 
+    // Escape HTML special characters to prevent XSS
+    function escapeHtml(str) {
+      if (str == null) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    // Validate and sanitize X username (only allow valid characters)
+    function sanitizeUsername(username) {
+      if (!username) return '';
+      // X usernames can only contain letters, numbers, and underscores
+      return username.replace(/[^a-zA-Z0-9_]/g, '');
+    }
+
     // Fetch and render nodes and people from API
     async function loadData() {
       const nodesContainer = document.getElementById('nodes-container');
       const peopleContainer = document.getElementById('people-container');
 
       try {
-        //const response = await fetch('http://localhost:8089/api/nodes/');
+        // const response = await fetch('http://localhost:8089/api/nodes/');
         const response = await fetch('https://bot.hacka.network/api/nodes/');
         const data = await response.json();
 
@@ -493,18 +511,21 @@
           }
 
           const dots = node.activity_level > 0
-            ? '<span class="activity-dot"></span>'.repeat(node.activity_level)
+            ? '<span class="activity-dot"></span>'.repeat(Math.min(node.activity_level, 10))
             : '';
 
           const attendeeCount = attendeeCounts[node.id] || 0;
           const attendeeText = attendeeCount > 0
-            ? `<span class="attendee-count">${attendeeCount} coming this week</span>`
+            ? `<span class="attendee-count">${parseInt(attendeeCount, 10)} coming this week</span>`
             : '';
 
+          // Validate URL starts with https://
+          const safeUrl = node.url && node.url.startsWith('https://') ? escapeHtml(node.url) : '#';
+
           return `
-            <a href="${node.url}" class="button">
-              <div class="button-title">${node.name} ${node.emoji}</div>
-              <div class="button-details">${node.location} · Est. ${node.established}</div>
+            <a href="${safeUrl}" class="button">
+              <div class="button-title">${escapeHtml(node.name)} ${escapeHtml(node.emoji)}</div>
+              <div class="button-details">${escapeHtml(node.location)} · Est. ${escapeHtml(node.established)}</div>
               <div class="activity-indicator" title="Activity level based on recent attendance">
                 ${dots ? `<span class="activity-dots ${activityClass}">${dots}</span>` : ''}
                 ${attendeeText}
@@ -564,15 +585,16 @@
           }
 
           const peopleRows = filteredPeople.map(person => {
-            const xLink = person.username_x
-              ? `<a href="https://x.com/${person.username_x}" target="_blank">@${person.username_x}</a>`
+            const safeUsername = sanitizeUsername(person.username_x);
+            const xLink = safeUsername
+              ? `<a href="https://x.com/${safeUsername}" target="_blank">@${safeUsername}</a>`
               : '';
 
             const nodesList = person.nodes
               .map(n => {
                 const node = window.nodeMap[n.id];
                 if (!node) return '';
-                const text = `${node.emoji}&nbsp;${node.name}`;
+                const text = `${escapeHtml(node.emoji)}&nbsp;${escapeHtml(node.name)}`;
                 return n.attending
                   ? `<span class="node-attending node-item">${text}</span>`
                   : `<span class="node-item">${text}</span>`;
@@ -581,12 +603,12 @@
               .join(', ');
 
             const bioRow = person.bio
-              ? `<tr class="person-bio"><td colspan="3">${person.bio}</td></tr>`
+              ? `<tr class="person-bio"><td colspan="3">${escapeHtml(person.bio)}</td></tr>`
               : '';
 
             return `
               <tr${person.bio ? ' class="person-main-row"' : ''}>
-                <td>${person.display_name}</td>
+                <td>${escapeHtml(person.display_name)}</td>
                 <td>${xLink}</td>
                 <td class="person-nodes">${nodesList}</td>
               </tr>
