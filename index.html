@@ -537,14 +537,19 @@
           // Validate URL starts with https://
           const safeUrl = node.url && node.url.startsWith('https://') ? escapeHtml(node.url) : '#';
 
+          const hasActivity = dots || attendeeText;
+          const activityHtml = hasActivity
+            ? `<div class="activity-indicator" title="Activity level based on recent attendance">
+                ${dots ? `<span class="activity-dots ${activityClass}">${dots}</span>` : ''}
+                ${attendeeText}
+              </div>`
+            : '';
+
           return `
             <a href="${safeUrl}" class="button">
               <div class="button-title">${escapeHtml(node.name)} ${escapeHtml(node.emoji)}</div>
               <div class="button-details">${escapeHtml(node.location)} · Est. ${escapeHtml(node.established)}</div>
-              <div class="activity-indicator" title="Activity level based on recent attendance">
-                ${dots ? `<span class="activity-dots ${activityClass}">${dots}</span>` : ''}
-                ${attendeeText}
-              </div>
+              ${activityHtml}
             </a>
           `;
         }).join('');
