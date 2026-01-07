@@ -364,6 +364,8 @@
     .attendee-count {
       font-size: 12px;
       font-weight: 500;
+      color: #22c55e;
+      opacity: 0.85;
     }
 
     /* Add styles for text selection */
@@ -514,16 +516,6 @@
           nodeMap[node.id] = node;
         });
 
-        // Count attendees per node
-        const attendeeCounts = {};
-        data.people.forEach(person => {
-          person.nodes.forEach(n => {
-            if (n.attending) {
-              attendeeCounts[n.id] = (attendeeCounts[n.id] || 0) + 1;
-            }
-          });
-        });
-
         // Render nodes
         nodesContainer.innerHTML = data.nodes.map(node => {
           let activityClass = 'low';
@@ -537,9 +529,9 @@
             ? '<span class="activity-dot"></span>'.repeat(Math.min(node.activity_level, 10))
             : '';
 
-          const attendeeCount = attendeeCounts[node.id] || 0;
+          const attendeeCount = node.attending_count || 0;
           const attendeeText = attendeeCount > 0
-            ? `<span class="attendee-count">${parseInt(attendeeCount, 10)} coming this week</span>`
+            ? `<span class="attendee-count">${parseInt(attendeeCount, 10)} going</span>`
             : '';
 
           // Validate URL starts with https://
