@@ -86,6 +86,7 @@
       text-decoration: none;
       display: block;
       position: relative;
+      overflow: hidden;
     }
 
     .button::before {
@@ -359,33 +360,31 @@
 
     /* Custom tooltip */
     .tooltip-trigger {
-      position: relative;
       cursor: help;
     }
 
-    .tooltip-trigger .tooltip {
-      position: absolute;
-      top: calc(100% + 8px);
-      left: 50%;
-      transform: translateX(-50%);
+    #global-tooltip {
+      position: fixed;
       background: #1a1a2e;
       color: #6BA3FF;
       padding: 8px 12px;
       border-radius: 6px;
       font-size: 12px;
-      width: max-content;
       max-width: 280px;
       text-align: center;
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity 0.15s, visibility 0.15s;
       border: 1px solid #3872EC;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-      z-index: 100;
+      z-index: 1000;
       pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.15s;
     }
 
-    .tooltip-trigger .tooltip::after {
+    #global-tooltip.visible {
+      opacity: 1;
+    }
+
+    #global-tooltip::before {
       content: '';
       position: absolute;
       bottom: 100%;
@@ -393,12 +392,6 @@
       transform: translateX(-50%);
       border: 6px solid transparent;
       border-bottom-color: #3872EC;
-    }
-
-    .tooltip-trigger:hover .tooltip,
-    .tooltip-trigger.tooltip-active .tooltip {
-      opacity: 1;
-      visibility: visible;
     }
 
     /* Add styles for text selection */
@@ -561,17 +554,11 @@
           const safeUrl = node.url && node.url.startsWith('https://') ? escapeHtml(node.url) : '#';
 
           const dotsHtml = dots
-            ? `<span class="activity-dots tooltip-trigger">
-                ${dots}
-                <span class="tooltip">Activity level (0-10) is based on how many people show up each week (relative to the size of the group) and how chatty the Telegram chat group is.</span>
-              </span>`
+            ? `<span class="activity-dots tooltip-trigger" data-tooltip="Activity level (0-10) is based on how many people show up each week (relative to the size of the group) and how chatty the Telegram chat group is.">${dots}</span>`
             : '';
 
           const attendeeHtml = attendeeCount > 0
-            ? `<span class="attendee-count tooltip-trigger">
-                ${attendeeCount} going
-                <span class="tooltip">${attendeeCount} confirmed they are going this Thursday</span>
-              </span>`
+            ? `<span class="attendee-count tooltip-trigger" data-tooltip="${attendeeCount} confirmed they are going this Thursday">${attendeeCount} going</span>`
             : '';
 
           const activityHtml = (dotsHtml || attendeeHtml)
@@ -701,20 +688,69 @@
 
     loadData();
 
-    // Mobile tooltip support - toggle on tap
-    document.addEventListener('click', (e) => {
+    // Global tooltip
+    const tooltip = document.createElement('div');
+    tooltip.id = 'global-tooltip';
+    document.body.appendChild(tooltip);
+
+    let activeTooltipTrigger = null;
+
+    function showTooltip(trigger) {
+      const text = trigger.dataset.tooltip;
+      if (!text) return;
+
+      tooltip.textContent = text;
+      tooltip.classList.add('visible');
+
+      const rect = trigger.getBoundingClientRect();
+      const tooltipRect = tooltip.getBoundingClientRect();
+
+      let left = rect.left + rect.width / 2 - tooltipRect.width / 2;
+      let top = rect.bottom + 8;
+
+      // Keep tooltip within viewport
+      if (left < 8) left = 8;
+      if (left + tooltipRect.width > window.innerWidth - 8) {
+        left = window.innerWidth - tooltipRect.width - 8;
+      }
+
+      tooltip.style.left = left + 'px';
+      tooltip.style.top = top + 'px';
+      activeTooltipTrigger = trigger;
+    }
+
+    function hideTooltip() {
+      tooltip.classList.remove('visible');
+      activeTooltipTrigger = null;
+    }
+
+    // Desktop hover
+    document.addEventListener('mouseenter', (e) => {
+      if (!e.target.closest) return;
       const trigger = e.target.closest('.tooltip-trigger');
+      if (trigger) showTooltip(trigger);
+    }, true);
 
-      // Close all tooltips first
-      document.querySelectorAll('.tooltip-trigger.tooltip-active').forEach(el => {
-        if (el !== trigger) el.classList.remove('tooltip-active');
-      });
+    document.addEventListener('mouseleave', (e) => {
+      if (!e.target.closest) return;
+      const trigger = e.target.closest('.tooltip-trigger');
+      if (trigger) hideTooltip();
+    }, true);
 
-      // Toggle clicked tooltip
+    // Mobile tap
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest) return;
+      const trigger = e.target.closest('.tooltip-trigger');
       if (trigger) {
         e.preventDefault();
         e.stopPropagation();
-        trigger.classList.toggle('tooltip-active');
+        if (activeTooltipTrigger === trigger) {
+          hideTooltip();
+        } else {
+          showTooltip(trigger);
+        }
+      } else {
+        hideTooltip();
       }
     });
   </script>
