@@ -86,7 +86,6 @@
       text-decoration: none;
       display: block;
       position: relative;
-      overflow: hidden;
     }
 
     .button::before {
@@ -351,15 +350,55 @@
       padding-bottom: 0;
     }
 
-    .activity-indicator {
-      cursor: help;
-    }
-
     .attendee-count {
       font-size: 12px;
       font-weight: 500;
       color: #22c55e;
       opacity: 0.85;
+    }
+
+    /* Custom tooltip */
+    .tooltip-trigger {
+      position: relative;
+      cursor: help;
+    }
+
+    .tooltip-trigger .tooltip {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: #1a1a2e;
+      color: #6BA3FF;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      width: max-content;
+      max-width: 280px;
+      text-align: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.15s, visibility 0.15s;
+      border: 1px solid #3872EC;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+      z-index: 100;
+      pointer-events: none;
+    }
+
+    .tooltip-trigger .tooltip::after {
+      content: '';
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 6px solid transparent;
+      border-bottom-color: #3872EC;
+    }
+
+    .tooltip-trigger:hover .tooltip,
+    .tooltip-trigger.tooltip-active .tooltip {
+      opacity: 1;
+      visibility: visible;
     }
 
     /* Add styles for text selection */
@@ -516,20 +555,27 @@
             ? '<span class="activity-dot"></span>'.repeat(Math.min(node.activity_level, 10))
             : '';
 
-          const attendeeCount = node.attending_count || 0;
-          const attendeeText = attendeeCount > 0
-            ? `<span class="attendee-count">${parseInt(attendeeCount, 10)} going</span>`
-            : '';
+          const attendeeCount = parseInt(node.attending_count, 10) || 0;
 
           // Validate URL starts with https://
           const safeUrl = node.url && node.url.startsWith('https://') ? escapeHtml(node.url) : '#';
 
-          const hasActivity = dots || attendeeText;
-          const activityHtml = hasActivity
-            ? `<span class="activity-indicator" title="Activity level based on recent attendance">
-                ${dots ? `<span class="activity-dots">${dots}</span>` : ''}
-                ${attendeeText}
+          const dotsHtml = dots
+            ? `<span class="activity-dots tooltip-trigger">
+                ${dots}
+                <span class="tooltip">Activity level (0-10) is based on how many people show up each week (relative to the size of the group) and how chatty the Telegram chat group is.</span>
               </span>`
+            : '';
+
+          const attendeeHtml = attendeeCount > 0
+            ? `<span class="attendee-count tooltip-trigger">
+                ${attendeeCount} going
+                <span class="tooltip">${attendeeCount} confirmed they are going this Thursday</span>
+              </span>`
+            : '';
+
+          const activityHtml = (dotsHtml || attendeeHtml)
+            ? `<span class="activity-indicator">${dotsHtml}${attendeeHtml}</span>`
             : '';
 
           return `
@@ -654,6 +700,23 @@
     }
 
     loadData();
+
+    // Mobile tooltip support - toggle on tap
+    document.addEventListener('click', (e) => {
+      const trigger = e.target.closest('.tooltip-trigger');
+
+      // Close all tooltips first
+      document.querySelectorAll('.tooltip-trigger.tooltip-active').forEach(el => {
+        if (el !== trigger) el.classList.remove('tooltip-active');
+      });
+
+      // Toggle clicked tooltip
+      if (trigger) {
+        e.preventDefault();
+        e.stopPropagation();
+        trigger.classList.toggle('tooltip-active');
+      }
+    });
   </script>
   <script async defer src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
   <noscript><img src="https://queue.simpleanalyticscdn.com/noscript.gif" alt="" referrerpolicy="no-referrer-when-downgrade" /></noscript>
