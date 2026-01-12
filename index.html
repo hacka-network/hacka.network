@@ -117,11 +117,14 @@
       font-weight: bold;
       color: #6BA3FF;
       margin-bottom: 6px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
     }
 
     .button-details {
       font-size: 14px;
-      margin-bottom: 6px;
     }
 
     .divider {
@@ -244,10 +247,9 @@
 
     /* Activity indicator */
     .activity-indicator {
-      display: flex;
+      display: inline-flex;
       align-items: center;
       gap: 8px;
-      min-height: 18px;
     }
 
     .activity-dots {
@@ -256,16 +258,8 @@
       gap: 3px;
     }
 
-    .activity-dots.high {
+    .activity-dots {
       color: #22c55e;
-    }
-
-    .activity-dots.medium {
-      color: #f97316;
-    }
-
-    .activity-dots.low {
-      color: #ef4444;
     }
 
     .activity-dot {
@@ -518,13 +512,6 @@
 
         // Render nodes
         nodesContainer.innerHTML = data.nodes.map(node => {
-          let activityClass = 'low';
-          if (node.activity_level > 7) {
-            activityClass = 'high';
-          } else if (node.activity_level > 3) {
-            activityClass = 'medium';
-          }
-
           const dots = node.activity_level > 0
             ? '<span class="activity-dot"></span>'.repeat(Math.min(node.activity_level, 10))
             : '';
@@ -539,17 +526,19 @@
 
           const hasActivity = dots || attendeeText;
           const activityHtml = hasActivity
-            ? `<div class="activity-indicator" title="Activity level based on recent attendance">
-                ${dots ? `<span class="activity-dots ${activityClass}">${dots}</span>` : ''}
+            ? `<span class="activity-indicator" title="Activity level based on recent attendance">
+                ${dots ? `<span class="activity-dots">${dots}</span>` : ''}
                 ${attendeeText}
-              </div>`
+              </span>`
             : '';
 
           return `
             <a href="${safeUrl}" class="button">
-              <div class="button-title">${escapeHtml(node.name)} ${escapeHtml(node.emoji)}</div>
+              <div class="button-title">
+                <span>${escapeHtml(node.name)} ${escapeHtml(node.emoji)}</span>
+                ${activityHtml}
+              </div>
               <div class="button-details">${escapeHtml(node.location)} · Est. ${escapeHtml(node.established)}</div>
-              ${activityHtml}
             </a>
           `;
         }).join('');
