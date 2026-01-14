@@ -14,4 +14,4 @@
 - Bullying/harrassment/spam
 - Posting about illegal/dodgy stuff (e.g. bot farms)
 - Often giving advice on topics without any personal experience or expertise on that topic
-- Participating in the chat despite not actively building an app/startup/project that is tech-related either part-time, full-time or as a side project (these do not count: info products, SEO content farms, agencies, freelancing, your developer day job)
+- Participating in the chat despite not actively building an app/startup/project that is tech-related either part-time, full-time or as a side project (these do not count: info products, e-commerce sites, dropshipping, SEO content farms, agencies, freelancing, your developer day job)
