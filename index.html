@@ -252,23 +252,6 @@
       gap: 8px;
     }
 
-    .activity-dots {
-      display: inline-flex;
-      align-items: center;
-      gap: 3px;
-    }
-
-    .activity-dots {
-      color: #22c55e;
-    }
-
-    .activity-dot {
-      width: 5px;
-      height: 5px;
-      border-radius: 50%;
-      background: currentColor;
-    }
-
     /* People section */
     #people-container {
       margin-top: 40px;
@@ -544,25 +527,17 @@
 
         // Render nodes
         nodesContainer.innerHTML = data.nodes.map(node => {
-          const dots = node.activity_level > 0
-            ? '<span class="activity-dot"></span>'.repeat(Math.min(node.activity_level, 10))
-            : '';
-
           const attendeeCount = parseInt(node.attending_count, 10) || 0;
 
           // Validate URL starts with https://
           const safeUrl = node.url && node.url.startsWith('https://') ? escapeHtml(node.url) : '#';
 
-          const dotsHtml = dots
-            ? `<span class="activity-dots tooltip-trigger" data-tooltip="Activity level (0-10) is based on how many people show up each week (relative to the size of the group) and how chatty the Telegram chat group is.">${dots}</span>`
-            : '';
-
           const attendeeHtml = attendeeCount > 0
             ? `<span class="attendee-count tooltip-trigger" data-tooltip="${attendeeCount} confirmed they are going this Thursday">${attendeeCount} going</span>`
             : '';
 
-          const activityHtml = (dotsHtml || attendeeHtml)
-            ? `<span class="activity-indicator">${dotsHtml}${attendeeHtml}</span>`
+          const activityHtml = attendeeHtml
+            ? `<span class="activity-indicator">${attendeeHtml}</span>`
             : '';
 
           return `
