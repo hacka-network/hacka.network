@@ -533,7 +533,7 @@
           const safeUrl = node.url && node.url.startsWith('https://') ? escapeHtml(node.url) : '#';
 
           const attendeeHtml = attendeeCount > 0
-            ? `<span class="attendee-count tooltip-trigger" data-tooltip="${attendeeCount} confirmed they are going this Thursday">${attendeeCount} going</span>`
+            ? `<span class="attendee-count tooltip-trigger" data-tooltip="${attendeeCount}+ confirmed they are going this Thursday">${attendeeCount}+ going</span>`
             : '';
 
           const activityHtml = attendeeHtml
