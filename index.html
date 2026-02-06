@@ -37,6 +37,7 @@
     .container {
       max-width: 800px;
       width: 100%;
+      max-width: min(800px, 100%);
       position: relative;
       z-index: 1;
     }
@@ -178,6 +179,7 @@
 
       .people-table {
         font-size: 12px;
+        table-layout: fixed;
       }
 
       .people-table th,
@@ -405,7 +407,7 @@
       max-width: 100%;
       position: fixed;
       right: 1rem;
-      top: 1rem;
+      bottom: 1rem;
       color: transparent;
       z-index: 2;
       transition: opacity 0.3s ease;
@@ -445,6 +447,55 @@
     @media (max-width: 600px) {
       .photo-item { flex-basis: 100%; max-width: 100%; }
     }
+
+    .photo-item { cursor: pointer; user-select: none; -webkit-user-select: none; transition: opacity 0.2s ease; }
+    .photo-item:hover { opacity: 0.8; }
+    .photo-item img { pointer-events: none; -webkit-user-drag: none; }
+
+    .photo-lightbox {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      z-index: 10000;
+      background: rgba(0, 0, 0, 0.92);
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .photo-lightbox.active { display: flex; }
+    .photo-lightbox img {
+      max-width: 94vw;
+      max-height: 80vh;
+      object-fit: contain;
+      border-radius: 8px;
+    }
+    .photo-lightbox-caption {
+      color: white;
+      text-align: center;
+      margin-top: 12px;
+      font-size: 15px;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+    }
+    .photo-lightbox-caption .photo-node-name { font-weight: bold; }
+    .photo-lightbox-caption .photo-days-ago { opacity: 0.8; font-size: 13px; }
+    .photo-lightbox-close {
+      position: absolute;
+      top: 16px; right: 16px;
+      width: 40px; height: 40px;
+      background: rgba(255, 255, 255, 0.15);
+      border: none;
+      border-radius: 50%;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .photo-lightbox-close:hover { background: rgba(255, 255, 255, 0.3); }
   </style>
 </head>
 
@@ -468,6 +519,11 @@
     <div id="recent-meetups-container" style="display: none;">
       <div class="people-section-title">Recent Meetups</div>
       <div id="photo-grid" class="photo-grid"></div>
+    </div>
+    <div class="photo-lightbox" id="photo-lightbox">
+      <button class="photo-lightbox-close" id="photo-lightbox-close">&times;</button>
+      <img id="photo-lightbox-img" src="" alt="Meetup photo">
+      <div class="photo-lightbox-caption" id="photo-lightbox-caption"></div>
     </div>
     <div id="people-container">
       <!-- People loaded dynamically from API -->
@@ -729,7 +785,7 @@
             : photo.days_ago === 1 ? '1 day ago'
             : `${photo.days_ago} days ago`;
           return `
-            <div class="photo-item">
+            <div class="photo-item" data-photo-src="${API_BASE}/api/photos/${photo.id}/image" data-photo-name="${escapeHtml(photo.node_name)} ${escapeHtml(photo.node_emoji)}" data-photo-days="${daysText}">
               <img src="${API_BASE}/api/photos/${photo.id}/image" alt="Meetup" loading="lazy">
               <div class="photo-overlay">
                 <div class="photo-node-name">${escapeHtml(photo.node_name)} ${escapeHtml(photo.node_emoji)}</div>
@@ -744,6 +800,32 @@
     }
 
     loadRecentPhotos();
+
+    // Photo lightbox
+    document.getElementById('photo-grid').addEventListener('click', function(e) {
+      const item = e.target.closest('.photo-item');
+      if (!item) return;
+      const lb = document.getElementById('photo-lightbox');
+      document.getElementById('photo-lightbox-img').src = item.dataset.photoSrc;
+      document.getElementById('photo-lightbox-caption').innerHTML =
+        `<div class="photo-node-name">${item.dataset.photoName}</div><div class="photo-days-ago">${item.dataset.photoDays}</div>`;
+      lb.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    });
+
+    function closePhotoLightbox() {
+      const lb = document.getElementById('photo-lightbox');
+      lb.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    document.getElementById('photo-lightbox-close').addEventListener('click', closePhotoLightbox);
+    document.getElementById('photo-lightbox').addEventListener('click', function(e) {
+      if (e.target === this) closePhotoLightbox();
+    });
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closePhotoLightbox();
+    });
 
     // Global tooltip
     const tooltip = document.createElement('div');
