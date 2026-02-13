@@ -781,7 +781,11 @@
         document.getElementById('recent-meetups-container').style.display = 'block';
 
         document.getElementById('photo-grid').innerHTML = photos.map(photo => {
-          const daysAgo = Math.floor((new Date() - new Date(photo.created)) / 86400000);
+          const now = new Date();
+          const created = new Date(photo.created);
+          const todayLocal = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+          const createdLocal = new Date(created.getFullYear(), created.getMonth(), created.getDate());
+          const daysAgo = Math.round((todayLocal - createdLocal) / 86400000);
           const daysText = daysAgo <= 0 ? 'Today'
             : daysAgo === 1 ? '1 day ago'
             : `${daysAgo} days ago`;
