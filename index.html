@@ -781,9 +781,10 @@
         document.getElementById('recent-meetups-container').style.display = 'block';
 
         document.getElementById('photo-grid').innerHTML = photos.map(photo => {
-          const daysText = photo.days_ago === 0 ? 'Today'
-            : photo.days_ago === 1 ? '1 day ago'
-            : `${photo.days_ago} days ago`;
+          const daysAgo = Math.floor((new Date() - new Date(photo.created)) / 86400000);
+          const daysText = daysAgo <= 0 ? 'Today'
+            : daysAgo === 1 ? '1 day ago'
+            : `${daysAgo} days ago`;
           return `
             <div class="photo-item" data-photo-src="${API_BASE}/api/photos/${photo.id}/image" data-photo-name="${escapeHtml(photo.node_name)} ${escapeHtml(photo.node_emoji)}" data-photo-days="${daysText}">
               <img src="${API_BASE}/api/photos/${photo.id}/image" alt="Meetup" loading="lazy">
