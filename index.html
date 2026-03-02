@@ -607,7 +607,7 @@
     // API base URL - use ?dev=1 in URL to point to local dev server
     const urlParams = new URLSearchParams(window.location.search);
     const API_BASE = urlParams.get('dev') === '1'
-      ? 'http://localhost:8089'
+      ? 'http://127.0.0.1:8089'
       : 'https://bot.hacka.network';
 
     if (urlParams.get('dev') === '1') {
