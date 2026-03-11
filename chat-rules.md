@@ -8,7 +8,7 @@
 - Tech questions or help related to your app or project (but please try Google/ChatGPT/Claude first)
 - Sharing interesting tech stuff (within reason, should be somehow related to building apps/startups)
 
-## Possible reasons for getting removed:
+## Possible reasons for getting removed (or restricted for 24h)
 
 - Consistently causing drama or arguments or posting off-topic stuff
 - Bullying/harrassment/spam
