@@ -37,7 +37,7 @@ You can maybe make a deal with your local coworking space to secure a weekly mee
 
 ## 4. Establish your Node's presence
 
-Create a dedicated website for your Node using the provided template (we let you know how to when you contact us, which, at this stage, you've already done).
+Create a dedicated website for your Node, getting inspired by the sites of other nodes at hacka.network. Ideally the site should have a signup form and the weekly schedule. We usually don't give out the exact location until after signup.
 
 Keep public/online promotion minimal to maintain the Node's culture and values (again, we have experience with this, it's the best approach generally). Carefully considering these will help to grow slow, stable and steadily. 
 It's best to invite people 1-on-1 if you feel like they're a good fit. Public promotions should be rare and carefully considered to maintain our culture. 
