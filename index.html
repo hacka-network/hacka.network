@@ -127,6 +127,21 @@
       font-size: 14px;
     }
 
+    .ascii-loader-wrap {
+      text-align: left;
+      margin: 0 0 20px;
+    }
+
+    .ascii-loader {
+      display: inline-block;
+      font-family: 'IBM Plex Mono', monospace;
+      white-space: pre;
+      font-size: 26px;
+      color: #3872EC;
+      opacity: 0.3;
+      text-shadow: 0 0 8px rgba(56, 114, 236, 0.6);
+    }
+
     .divider {
       border-top: 1px solid #3872EC;
       margin: 60px 0;
@@ -615,14 +630,46 @@
       console.log('🔧 Dev mode: using API at', API_BASE);
     }
 
+    // A simple animated ASCII loading bar, shown while APIs load.
+    function startAsciiLoader(container, what) {
+      const wrap = document.createElement('div');
+      wrap.className = 'ascii-loader-wrap';
+      const pre = document.createElement('pre');
+      pre.className = 'ascii-loader';
+      pre.setAttribute('aria-label', 'Loading ' + what + '…');
+      wrap.appendChild(pre);
+      container.innerHTML = '';
+      container.appendChild(wrap);
+
+      const TRACK = 24;
+      const SEG = 7;
+      let f = 0;
+      const tick = () => {
+        const pos = f % TRACK;
+        let bar = '';
+        for (let i = 0; i < TRACK; i++) {
+          const d = ((i - pos) % TRACK + TRACK) % TRACK;
+          bar += d < SEG ? '█' : '░';
+        }
+        pre.textContent = bar;
+        f++;
+      };
+      tick();
+      const id = setInterval(tick, 80);
+      return { stop: () => clearInterval(id) };
+    }
+
     // Fetch and render nodes and people from API
     async function loadData() {
       const nodesContainer = document.getElementById('nodes-container');
       const peopleContainer = document.getElementById('people-container');
 
+      const loader = startAsciiLoader(nodesContainer, 'nodes');
+
       try {
         const response = await fetch(`${API_BASE}/api/nodes/`);
         const data = await response.json();
+        loader.stop();
 
         // Create a lookup map for node IDs to their details
         const nodeMap = {};
@@ -764,6 +811,7 @@
         document.getElementById('people-search').addEventListener('input', renderPeople);
       } catch (error) {
         console.error('Failed to load data:', error);
+        loader.stop();
         nodesContainer.innerHTML = '<p>Failed to load nodes</p>';
         peopleContainer.innerHTML = '';
       }
@@ -772,16 +820,25 @@
     loadData();
 
     async function loadRecentPhotos() {
+      const meetupsContainer = document.getElementById('recent-meetups-container');
+      const grid = document.getElementById('photo-grid');
+
+      meetupsContainer.style.display = 'block';
+      const loader = startAsciiLoader(grid, 'photos');
+
       try {
         const response = await fetch(`${API_BASE}/api/photos/`);
         const data = await response.json();
         const photos = data.photos || [];
 
-        if (photos.length === 0) return;
+        loader.stop();
 
-        document.getElementById('recent-meetups-container').style.display = 'block';
+        if (photos.length === 0) {
+          meetupsContainer.style.display = 'none';
+          return;
+        }
 
-        document.getElementById('photo-grid').innerHTML = photos.map(photo => {
+        grid.innerHTML = photos.map(photo => {
           const now = new Date();
           const created = new Date(photo.created);
           const todayLocal = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -802,6 +859,8 @@
         }).join('');
       } catch (e) {
         console.error('Failed to load recent photos:', e);
+        loader.stop();
+        meetupsContainer.style.display = 'none';
       }
     }
 
