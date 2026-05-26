@@ -21,7 +21,7 @@ Commiting to building something an intros is a great motivator for shipping it f
 
 ## 2. Connect with the global network
 
-If you like what you read, the next step is to reach out to the Hacka* network organizers to assist with setting up your Telegram group, Node website, and any other resources you might need. 
+If you like what you read, the next step is to reach out to the Hacka* network organizers to assist with setting up your Telegram group, Node website, and any other resources you might need. You can email us using the Contact button at [hacka.network](https://hacka.network).
 
 We're here to help you and ensure you have the necessary support for a successful Node launch!
 

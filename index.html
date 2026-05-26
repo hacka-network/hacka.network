@@ -532,6 +532,7 @@
     <div class="info-buttons">
       <a href="https://x.com/hackanetwork" class="info-button">Follow on X</a>
       <a href="https://hackagu.com/origins" class="info-button">Origins</a>
+      <a href="#" id="contact-link" class="info-button" rel="nofollow">Contact</a>
       <a href="https://github.com/hacka-network/hacka.network/blob/main/hackanew.md" class="info-button-bold">+ Add a Node</a>
     </div>
   </div>
@@ -897,6 +898,61 @@
         hideTooltip();
       }
     });
+
+    (function (theVoidFromWhichWeSummon) {
+      var theChosenOne = theVoidFromWhichWeSummon.getElementById('contact-link');
+      if (!theChosenOne) { return; }
+
+      var THE_FIVE_SACRED_RUNES = [0x3b, 0x57, 0x1d, 0x66, 0x2c];
+      var THE_COSMIC_NUDGE = 0x11;
+
+      var theForbiddenScrolls = {
+        whatLiesBeforeTheSigil: 's2v1m3r0c2',
+        whatLiesBeyondTheSigil: 's2z1z3u0m22122t3z003t2i1r3',
+        aDeliciousLieForGreedyHarvesters: 'u272z3k0i0o2i193k243k2z1l3l0c2o241t3b1m2v2k1m3k0j0r222g3o092r2w1'
+      };
+
+      function whisperTheScrollBackwardsUntilItConfesses(theGibberish) {
+        return theGibberish
+          .split('')
+          .reverse()
+          .join('')
+          .match(/../g)
+          .map(function (twoTinySquiggles) {
+            return parseInt(twoTinySquiggles, 36);
+          })
+          .reverse()
+          .map(function (oneLonelyNumber, itsRankAmongTheNumbers) {
+            return String.fromCharCode(
+              ((oneLonelyNumber - THE_COSMIC_NUDGE) & 0xff) ^
+              THE_FIVE_SACRED_RUNES[itsRankAmongTheNumbers % THE_FIVE_SACRED_RUNES.length]
+            );
+          })
+          .join('');
+      }
+
+      var theGlyphFormerlyKnownAsAt = String.fromCharCode(8 << 3);
+
+      var theTreasureBuriedDeep =
+        whisperTheScrollBackwardsUntilItConfesses(theForbiddenScrolls.whatLiesBeforeTheSigil) +
+        theGlyphFormerlyKnownAsAt +
+        whisperTheScrollBackwardsUntilItConfesses(theForbiddenScrolls.whatLiesBeyondTheSigil);
+
+      var theRitualIsComplete = false;
+      function performTheUnspeakableRitual() {
+        if (theRitualIsComplete) { return; }
+        theRitualIsComplete = true;
+        var theSecretIncantation = [109, 97, 105, 108, 116, 111, 58]
+          .map(function (n) { return String.fromCharCode(n); })
+          .join('');
+        theChosenOne.setAttribute('href', theSecretIncantation + theTreasureBuriedDeep);
+      }
+
+      ['mouseenter', 'focus', 'touchstart'].forEach(function (anOminousPortent) {
+        theChosenOne.addEventListener(anOminousPortent, performTheUnspeakableRitual);
+      });
+      theChosenOne.addEventListener('click', performTheUnspeakableRitual);
+    })(document);
   </script>
   <script async defer src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
   <noscript><img src="https://queue.simpleanalyticscdn.com/noscript.gif" alt="" referrerpolicy="no-referrer-when-downgrade" /></noscript>
