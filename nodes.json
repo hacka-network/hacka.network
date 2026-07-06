@@ -1,0 +1,132 @@
+{
+  "nodes": [
+    {
+      "name": "Hackagu",
+      "emoji": "🇮🇩",
+      "established": 2019,
+      "location": "Canggu, Bali",
+      "timezone": "Asia/Makassar",
+      "signup_url": "https://hackagu.org"
+    },
+    {
+      "name": "Hackumvit",
+      "emoji": "🇹🇭",
+      "established": 2022,
+      "location": "Bangkok",
+      "timezone": "Asia/Bangkok",
+      "signup_url": "https://hackumvit.com"
+    },
+    {
+      "name": "Hackapura",
+      "emoji": "🇸🇬",
+      "established": 2023,
+      "location": "Singapore",
+      "timezone": "Asia/Singapore",
+      "signup_url": "https://www.hackapura.com/"
+    },
+    {
+      "name": "Hackamai",
+      "emoji": "🇹🇭",
+      "established": 2024,
+      "location": "Chiang Mai, Thailand",
+      "timezone": "Asia/Bangkok",
+      "signup_url": "https://hackamai.com"
+    },
+    {
+      "name": "Hackaditch",
+      "emoji": "🇬🇧",
+      "established": 2024,
+      "location": "Shoreditch, London",
+      "timezone": "Europe/London",
+      "signup_url": "https://hackaditch.com"
+    },
+    {
+      "name": "Hackaigon",
+      "emoji": "🇻🇳",
+      "established": 2024,
+      "location": "Ho Chi Minh City, Vietnam",
+      "timezone": "Asia/Ho_Chi_Minh",
+      "signup_url": "https://tally.so/r/mDJ2V5"
+    },
+    {
+      "name": "Hackaseoul",
+      "emoji": "🇰🇷",
+      "established": 2025,
+      "location": "Seoul",
+      "timezone": "Asia/Seoul",
+      "signup_url": "https://hackaseoul.com"
+    },
+    {
+      "name": "Hackanang",
+      "emoji": "🇻🇳",
+      "established": 2025,
+      "location": "Da Nang, Vietnam",
+      "timezone": "Asia/Ho_Chi_Minh",
+      "signup_url": "https://tally.so/r/3XXRbV"
+    },
+    {
+      "name": "Hackadam",
+      "emoji": "🇳🇱",
+      "established": 2025,
+      "location": "Amsterdam",
+      "timezone": "Europe/Amsterdam",
+      "signup_url": "https://hackadam.nl/"
+    },
+    {
+      "name": "Hackaboa",
+      "emoji": "🇵🇹",
+      "established": 2025,
+      "location": "Lisbon",
+      "timezone": "Europe/Lisbon",
+      "signup_url": "https://hackaboa.com"
+    },
+    {
+      "name": "Hackayork",
+      "emoji": "🇺🇸",
+      "established": 2025,
+      "location": "New York",
+      "timezone": "America/New_York",
+      "signup_url": "https://hackayork.com/"
+    },
+    {
+      "name": "Hackalencia",
+      "emoji": "🇪🇸",
+      "established": 2026,
+      "location": "Valencia, Spain",
+      "timezone": "Europe/Madrid",
+      "signup_url": "https://hackalencia.com/"
+    },
+    {
+      "name": "Hackaris",
+      "emoji": "🇫🇷",
+      "established": 2026,
+      "location": "Paris",
+      "timezone": "Europe/Paris",
+      "signup_url": "https://hackaris.xyz/"
+    },
+    {
+      "name": "Hackalona",
+      "emoji": "🇪🇸",
+      "established": 2026,
+      "location": "Barcelona",
+      "timezone": "Europe/Madrid",
+      "signup_url": "https://hackalona.com/"
+    },
+    {
+      "name": "Hackamui",
+      "emoji": "🇹🇭",
+      "established": 2026,
+      "location": "Koh Samui, Thailand",
+      "timezone": "Asia/Bangkok",
+      "signup_url": "https://hackamui.com"
+    },
+    {
+      "name": "Hackapei",
+      "emoji": "🇹🇼",
+      "established": 2026,
+      "location": "Taipei, Taiwan",
+      "timezone": "Asia/Taipei",
+      "signup_url": "https://hackapei.com/"
+    }
+  ]
+}

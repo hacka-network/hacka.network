@@ -65,4 +65,17 @@ By following these steps, you can successfully launch a Hacka* Node, creating a 
 
 ## 8. Add your node to the site
 
-Add your meetup details here https://github.com/hacka-network/hacka.network/blob/main/index.html and submit a Pull Request.
+Once you've connected with the network (step 2) and your Node is up and running, add it to the list at [hacka.network](https://hacka.network) by editing [`nodes.json`](https://github.com/hacka-network/hacka.network/blob/main/nodes.json) and submitting a Pull Request.
+
+Add an entry to the `nodes` list with all of these fields:
+
+- `name`: your Node's name (e.g. "Hackalona")
+- `emoji`: a flag emoji for your location (e.g. 🇪🇸)
+- `established`: the year your Node started (e.g. 2026)
+- `location`: the city (e.g. "Barcelona")
+- `timezone`: your IANA timezone name (e.g. "Europe/Madrid")
+- `signup_url`: your Node's website or signup page (must start with https://)
+
+Once the Pull Request is merged, your Node will appear on hacka.network within a few minutes.
+
+To get the Telegram side working (weekly attendance polls, and attendance and member info on the site), create a Telegram group for your Node, add [@the_hackabot](https://t.me/the_hackabot) to it, and make the bot an admin. It needs admin rights so it can pin the weekly poll. Then contact us so we can connect your group on our side.
