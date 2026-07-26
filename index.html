@@ -7,7 +7,6 @@
   <title>Hacka*</title>
   <link rel="icon" type="image/png" href="favicon.png">
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&family=Press+Start+2P&display=swap" rel="stylesheet">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <style>
     body {
       font-family: 'IBM Plex Mono', monospace;
@@ -25,13 +24,71 @@
       min-height: 100vh; /* Ensure full viewport height */
     }
 
-    #globe-background {
+    /* Two layers moving against each other. One rigid layer drifting reads as
+       static no matter how far it travels, because every blob keeps its
+       position relative to the others. Opposed directions and mismatched
+       periods (17s / 26s) mean the two never resolve into a repeating pose.
+
+       Both are inset well past the viewport so the travel and rotation never
+       expose an edge. Gradient percentages are relative to that larger box,
+       not the viewport: viewport top sits at 23.7%, bottom at 76.3%. */
+    body::before,
+    body::after {
+      content: '';
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      inset: -45%;
       z-index: -1;
+      pointer-events: none;
+    }
+
+    /* Tighter falloff than a full wash: a defined core reads as moving, where a
+       broad haze just looks static however far it travels. Peak alpha runs
+       above the intended level and the opacity animation below pulls the
+       average back down to it.
+
+       Position, extent, phase, direction and period are all re-rolled per load
+       by the script below. The literals here are the fallbacks, and are what
+       renders if that script never runs. */
+    body::before {
+      background-image:
+        radial-gradient(ellipse var(--g1-w, 44%) var(--g1-h, 27%) at var(--g1-x, 50%) var(--g1-y, 29%),
+          rgba(56, 114, 236, 0.14), transparent 58%),
+        radial-gradient(ellipse var(--g2-w, 34%) var(--g2-h, 24%) at var(--g2-x, 29%) var(--g2-y, 79%),
+          rgba(56, 114, 236, 0.085), transparent 58%);
+      animation: bg-drift-a var(--dur-a, 17s) ease-in-out infinite var(--dir-a, alternate);
+      animation-delay: var(--delay-a, 0s);
+    }
+
+    body::after {
+      background-image:
+        radial-gradient(ellipse var(--g3-w, 27%) var(--g3-h, 22%) at var(--g3-x, 74%) var(--g3-y, 63%),
+          rgba(135, 206, 235, 0.062), transparent 58%),
+        radial-gradient(ellipse var(--g4-w, 24%) var(--g4-h, 20%) at var(--g4-x, 18%) var(--g4-y, 38%),
+          rgba(56, 114, 236, 0.078), transparent 58%);
+      animation: bg-drift-b var(--dur-b, 26s) ease-in-out infinite var(--dir-b, alternate);
+      animation-delay: var(--delay-b, 0s);
+    }
+
+    /* Transform and opacity only, so the drift stays on the compositor and
+       never repaints the gradients. The two opacity curves run opposite, so
+       brightness shifts around the page instead of the whole thing pulsing. */
+    /* The opacity floors are set so that a load starting with both layers at
+       their dim end still has visible colour. Randomised phase and direction
+       mean that combination will come up, and without a floor roughly a
+       quarter of loads opened on a near-flat page. */
+    @keyframes bg-drift-a {
+      from { transform: translate3d(-16%, -10%, 0) rotate(-9deg) scale(1); opacity: 0.62; }
+      to   { transform: translate3d(16%, 10%, 0) rotate(9deg) scale(1.4); opacity: 1; }
+    }
+
+    @keyframes bg-drift-b {
+      from { transform: translate3d(14%, 9%, 0) rotate(8deg) scale(1.35); opacity: 1; }
+      to   { transform: translate3d(-14%, -9%, 0) rotate(-8deg) scale(1); opacity: 0.58; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      body::before,
+      body::after { animation: none; }
     }
 
     .container {
@@ -305,13 +362,36 @@
       opacity: 0.6;
     }
 
+    /* Two pulses rather than one, so it reads as a deliberate pointer rather
+       than a rendering blip. */
     .button.is-flashing {
-      animation: node-flash 1.1s ease;
+      animation: node-flash 1.6s ease-out;
     }
 
     @keyframes node-flash {
-      0%, 100% { box-shadow: none; }
-      18% { box-shadow: 0 0 12px #3872EC, 0 0 26px #3872EC, 0 0 48px #3872EC; }
+      0%, 100% {
+        border-color: #3872EC;
+        box-shadow: 0 0 0 0 rgba(56, 114, 236, 0);
+      }
+      12%, 56% {
+        border-color: #A8C6FF;
+        box-shadow: 0 0 0 4px rgba(56, 114, 236, 0.28), 0 0 26px rgba(56, 114, 236, 0.85);
+      }
+      34% {
+        border-color: #3872EC;
+        box-shadow: 0 0 0 0 rgba(56, 114, 236, 0);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .button.is-flashing {
+        animation: node-flash-reduced 1.8s ease-out;
+      }
+
+      @keyframes node-flash-reduced {
+        0%, 100% { border-color: #3872EC; }
+        25%, 65% { border-color: #A8C6FF; }
+      }
     }
 
     @media (max-width: 600px) {
@@ -706,10 +786,57 @@
     }
     .photo-lightbox-close:hover { background: rgba(255, 255, 255, 0.3); }
   </style>
+
+  <script>
+    /* Re-roll the background gradients per load. Each blob is confined to its
+       own zone rather than placed anywhere: the point is a page that differs
+       every visit, not one that occasionally renders as flat black because
+       every blob happened to land off screen together.
+
+       Ranges are in the drift layer's coordinate space, where the viewport
+       spans 23.7% to 76.3%. Values outside that band are deliberate, for blobs
+       meant to glow in from beyond an edge.
+
+       Runs in <head> so the first paint is already randomised. */
+    (function randomiseBackground() {
+      const rand = (min, max) => min + Math.random() * (max - min);
+      const pct = (min, max) => rand(min, max).toFixed(1) + '%';
+
+      /* Blob 1 carries the page, so its range is the viewport band inset by the
+         drift amplitude (16% / 10% of the layer box). That keeps its centre on
+         screen at every phase. Widen it and some loads push the centre past the
+         edge and open near-black. The other three are edge accents and are
+         meant to sit partly outside. */
+      const blobs = [
+        { n: 1, x: [42, 58], y: [35, 45], w: [36, 54], h: [22, 33] },
+        { n: 2, x: [22, 40], y: [70, 84], w: [28, 42], h: [20, 30] },
+        { n: 3, x: [62, 82], y: [52, 72], w: [22, 34], h: [18, 27] },
+        { n: 4, x: [16, 34], y: [30, 50], w: [20, 30], h: [16, 25] }
+      ];
+
+      const root = document.documentElement.style;
+
+      blobs.forEach(b => {
+        root.setProperty('--g' + b.n + '-x', pct(b.x[0], b.x[1]));
+        root.setProperty('--g' + b.n + '-y', pct(b.y[0], b.y[1]));
+        root.setProperty('--g' + b.n + '-w', pct(b.w[0], b.w[1]));
+        root.setProperty('--g' + b.n + '-h', pct(b.h[0], b.h[1]));
+      });
+
+      /* A negative delay starts the animation mid-cycle, so the drift is
+         already somewhere different rather than always beginning at one end. */
+      [['a', 17], ['b', 26]].forEach(([layer, base]) => {
+        const duration = rand(base * 0.8, base * 1.25);
+        root.setProperty('--dur-' + layer, duration.toFixed(1) + 's');
+        root.setProperty('--delay-' + layer, (-rand(0, duration * 2)).toFixed(1) + 's');
+        root.setProperty('--dir-' + layer,
+          Math.random() < 0.5 ? 'alternate' : 'alternate-reverse');
+      });
+    })();
+  </script>
 </head>
 
 <body>
-  <canvas id="globe-background"></canvas>
   <a href="https://github.com/hacka-network/hacka.network" target="_blank" class="github-icon">
     <img alt="Edit this on GitHub" width="30" height="30" src="github.svg">
   </a>
@@ -752,47 +879,6 @@
 
   <script src="map-data.js"></script>
   <script>
-    // Globe animation
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('globe-background'), alpha: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-
-    const radius = Math.min(window.innerWidth, window.innerHeight) / 2;
-    const geometry = new THREE.SphereGeometry(radius, 64, 64);
-    const material = new THREE.MeshBasicMaterial({
-      color: 0x87CEEB,
-      wireframe: true,
-      transparent: true,
-      opacity: 0.05
-    });
-    const globe = new THREE.Mesh(geometry, material);
-    scene.add(globe);
-
-    camera.position.z = radius * 1.5;
-
-    function animate() {
-      requestAnimationFrame(animate);
-      globe.rotation.x += 0.0005;
-      globe.rotation.y += 0.001;
-      renderer.render(scene, camera);
-    }
-    animate();
-
-    function onWindowResize() {
-      const newRadius = Math.min(window.innerWidth, window.innerHeight) / 2;
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
-      globe.geometry = new THREE.SphereGeometry(newRadius, 64, 64);
-      camera.position.z = newRadius * 1.5;
-    }
-
-    window.addEventListener('resize', onWindowResize);
-
-    // Ensure initial sizing is correct
-    onWindowResize();
-
     // Escape HTML special characters to prevent XSS
     function escapeHtml(str) {
       if (str == null) return '';
@@ -1023,13 +1109,39 @@
       element.style.top = (below + height > window.innerHeight - 8 ? Math.max(8, box.top - height - 9) : below) + 'px';
     }
 
+    const PREFERS_REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    /* Wait for the smooth scroll to stop before flashing, otherwise a long
+       journey down the page finishes the animation before the card is on
+       screen. Fires on its own if the card was already in view and no scroll
+       event ever arrives. */
+    function whenScrollSettles(callback) {
+      let timer;
+      const finish = () => {
+        window.removeEventListener('scroll', onScroll);
+        callback();
+      };
+      const onScroll = () => {
+        clearTimeout(timer);
+        timer = setTimeout(finish, 120);
+      };
+      window.addEventListener('scroll', onScroll, { passive: true });
+      timer = setTimeout(finish, 120);
+    }
+
     function highlightCard(id) {
       const card = document.getElementById('node-card-' + id);
       if (!card) return;
-      card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      card.classList.remove('is-flashing');
-      void card.offsetWidth;
-      card.classList.add('is-flashing');
+      card.scrollIntoView({
+        behavior: PREFERS_REDUCED_MOTION ? 'auto' : 'smooth',
+        block: 'center'
+      });
+      whenScrollSettles(() => {
+        document.querySelectorAll('.button.is-flashing')
+          .forEach(el => el.classList.remove('is-flashing'));
+        void card.offsetWidth;
+        card.classList.add('is-flashing');
+      });
     }
 
     /* Touch has no hover, so the picker doubles as the preview there: one tap
