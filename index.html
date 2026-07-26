@@ -71,7 +71,9 @@
 
     .button-container {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      /* auto-fill, not auto-fit, so a region with a single node keeps the
+         column width instead of stretching across the row. */
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
       gap: 20px;
     }
 
@@ -125,6 +127,198 @@
 
     .button-details {
       font-size: 14px;
+    }
+
+    /* Node map. Full-bleed so the scroll rail spans the viewport on phones;
+       the map itself stays 800px on desktop and only scrolls when narrower. */
+    .node-map-scroll {
+      width: 100vw;
+      max-width: 100vw;
+      margin-left: calc(50% - 50vw);
+      margin-bottom: 46px;
+      padding: 0 16px;
+      box-sizing: border-box;
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior-x: contain;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    .node-map-scroll::-webkit-scrollbar {
+      display: none;
+    }
+
+    .node-map {
+      display: grid;
+      width: 100%;
+      max-width: 800px;
+      min-width: 560px;
+      margin: 0 auto;
+    }
+
+    /* Dot sizes derive from --cell (set in JS) so the map reads the same at
+       any width instead of blowing out on small screens. */
+    .map-cell {
+      position: relative;
+      aspect-ratio: 1 / 1;
+      --land-dot: 0.30;
+      --node-dot: 0.62;
+    }
+
+    .map-cell.is-land::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      margin: auto;
+      width: calc(var(--cell) * var(--land-dot));
+      height: calc(var(--cell) * var(--land-dot));
+      border-radius: 50%;
+      background: #3872EC;
+      opacity: 0.46;
+    }
+
+    .map-cell.is-node {
+      cursor: pointer;
+      z-index: 2;
+    }
+
+    /* Transparent expanded hit area, so dots stay tappable on touch screens. */
+    .map-cell.is-node::before {
+      content: '';
+      position: absolute;
+      inset: calc(var(--cell) * -0.9);
+      z-index: 3;
+    }
+
+    .map-cell.is-node::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      margin: auto;
+      width: calc(var(--cell) * var(--node-dot));
+      height: calc(var(--cell) * var(--node-dot));
+      border-radius: 50%;
+      background: #a8c8ff;
+      box-shadow: 0 0 calc(var(--cell) * 0.45) #6BA3FF,
+                  0 0 calc(var(--cell) * 1.05) #3872EC,
+                  0 0 calc(var(--cell) * 2) rgba(56, 114, 236, 0.85);
+      transition: transform 0.18s ease;
+    }
+
+    /* Several nodes in one time zone read as a bigger, brighter dot, so the
+       busier regions stand out. Two steps: two nodes, then three or more. */
+    .map-cell.is-stacked::after {
+      width: calc(var(--cell) * var(--node-dot) * 1.5);
+      height: calc(var(--cell) * var(--node-dot) * 1.5);
+      box-shadow: 0 0 calc(var(--cell) * 0.7) #6BA3FF,
+                  0 0 calc(var(--cell) * 1.6) #3872EC,
+                  0 0 calc(var(--cell) * 2.6) rgba(56, 114, 236, 0.9);
+    }
+
+    .map-cell.is-stacked-large::after {
+      width: calc(var(--cell) * var(--node-dot) * 1.9);
+      height: calc(var(--cell) * var(--node-dot) * 1.9);
+      box-shadow: 0 0 calc(var(--cell) * 0.9) #6BA3FF,
+                  0 0 calc(var(--cell) * 2) #3872EC,
+                  0 0 calc(var(--cell) * 3.1) rgba(56, 114, 236, 0.95);
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      .map-cell.is-node:hover::after {
+        transform: scale(1.6);
+      }
+    }
+
+    .map-cell.is-node:focus-visible {
+      outline: none;
+    }
+
+    .map-cell.is-node:focus-visible::after {
+      transform: scale(1.9);
+      box-shadow: 0 0 0 2px #cfe0ff, 0 0 12px #3872EC;
+    }
+
+    /* Shown when a dot holds several nodes, and for every dot on touch. */
+    .node-picker {
+      position: fixed;
+      display: none;
+      z-index: 1001;
+      min-width: 190px;
+      padding: 5px;
+      background: #10101f;
+      border: 1px solid #3872EC;
+      border-radius: 7px;
+      box-shadow: 0 6px 22px rgba(0, 0, 0, 0.6);
+    }
+
+    .node-picker.visible {
+      display: block;
+    }
+
+    .node-picker a {
+      display: block;
+      padding: 7px 10px;
+      border-radius: 4px;
+      color: #6BA3FF;
+      font-size: 13px;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .node-picker a:hover {
+      background: rgba(56, 114, 236, 0.22);
+      color: #cfe0ff;
+    }
+
+    .node-picker a span {
+      display: block;
+      font-size: 11px;
+      opacity: 0.6;
+    }
+
+    .region-heading {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 34px 0 16px;
+      font-size: 13px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      opacity: 0.65;
+    }
+
+    .region-heading:first-child {
+      margin-top: 0;
+    }
+
+    .region-heading::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #3872EC;
+      opacity: 0.3;
+    }
+
+    .region-heading span {
+      opacity: 0.6;
+    }
+
+    .button.is-flashing {
+      animation: node-flash 1.1s ease;
+    }
+
+    @keyframes node-flash {
+      0%, 100% { box-shadow: none; }
+      18% { box-shadow: 0 0 12px #3872EC, 0 0 26px #3872EC, 0 0 48px #3872EC; }
+    }
+
+    @media (max-width: 600px) {
+      .map-cell {
+        --land-dot: 0.24;
+        --node-dot: 0.48;
+      }
     }
 
     .ascii-loader-wrap {
@@ -528,8 +722,11 @@
         independent apps/startups, meeting up every Thursday for weekly co-working (and demos) all around the world.
       </p>
     </div>
-    <div class="button-container" id="nodes-container">
-      <!-- Nodes loaded dynamically from API -->
+    <div class="node-map-scroll" hidden>
+      <div class="node-map" id="node-map"></div>
+    </div>
+    <div id="nodes-container">
+      <!-- Nodes loaded dynamically from API, grouped by region -->
     </div>
     <div id="recent-meetups-container" style="display: none;">
       <div class="people-section-title">Recent Meetups</div>
@@ -551,7 +748,9 @@
       <a href="https://github.com/hacka-network/hacka.network/blob/main/hackanew.md" class="info-button-bold">+ Add a Node</a>
     </div>
   </div>
+  <div class="node-picker" id="node-picker"></div>
 
+  <script src="map-data.js"></script>
   <script>
     // Globe animation
     const scene = new THREE.Scene();
@@ -659,6 +858,276 @@
       return { stop: () => clearInterval(id) };
     }
 
+    /* Node map. Positions come from each node's IANA time zone (tables live in
+       map-data.js), so a node added to the API appears on the map with no
+       change to this file. An unknown zone simply gets no dot and still lists
+       in the cards below. */
+    // If map-data.js is missing the page still works: no map, and the nodes
+    // fall back to one ungrouped list.
+    const HAS_MAP_DATA = typeof HACKA_LAND !== 'undefined' && typeof HACKA_TZ !== 'undefined';
+
+    const MAP_BOUNDS = { latMax: 78, latMin: -56, lonMin: -180, lonMax: 180 };
+    const MAP_ROWS = HAS_MAP_DATA ? HACKA_LAND.length : 0;
+    const MAP_COLS = HAS_MAP_DATA ? HACKA_LAND[0].length : 0;
+    const MAX_DRIFT = 1;    // cells a dot may move to avoid sharing one
+    const SNAP_RADIUS = 3;  // cells searched for land when a zone falls at sea
+
+    const REGION_NAMES = {
+      A: 'Asia', E: 'Europe', M: 'Americas',
+      F: 'Africa', O: 'Oceania', N: 'Antarctica'
+    };
+
+    const TIMEZONES = {};
+    if (HAS_MAP_DATA) {
+      HACKA_TZ.split(';').forEach(entry => {
+        const [zone, values] = entry.split(':');
+        const [lat, lon, region] = values.split(',');
+        TIMEZONES[zone] = { lat: Number(lat) / 10, lon: Number(lon) / 10, region: region };
+      });
+    }
+
+    const nodeMap = document.getElementById('node-map');
+    const nodeMapScroll = document.querySelector('.node-map-scroll');
+    const nodePicker = document.getElementById('node-picker');
+
+    let nodesById = {};
+    let mapScrolledByUser = false;
+    let mapScrollIsProgrammatic = false;
+
+    function cellForCoords(lat, lon) {
+      return {
+        col: Math.floor((lon - MAP_BOUNDS.lonMin) / (MAP_BOUNDS.lonMax - MAP_BOUNDS.lonMin) * MAP_COLS),
+        row: Math.floor((MAP_BOUNDS.latMax - lat) / (MAP_BOUNDS.latMax - MAP_BOUNDS.latMin) * MAP_ROWS)
+      };
+    }
+
+    function inGrid(col, row) {
+      return col >= 0 && row >= 0 && col < MAP_COLS && row < MAP_ROWS;
+    }
+
+    function isLand(col, row) {
+      return inGrid(col, row) && HACKA_LAND[row][col] === '1';
+    }
+
+    // Closest cell to col,row that passes accept(), searched ring by ring.
+    function nearestCell(col, row, radius, accept) {
+      for (let ring = 1; ring <= radius; ring++) {
+        const candidates = [];
+        for (let dc = -ring; dc <= ring; dc++) {
+          for (let dr = -ring; dr <= ring; dr++) {
+            if (Math.max(Math.abs(dc), Math.abs(dr)) === ring) candidates.push([col + dc, row + dr]);
+          }
+        }
+        candidates.sort((a, b) =>
+          ((a[0] - col) ** 2 + (a[1] - row) ** 2) - ((b[0] - col) ** 2 + (b[1] - row) ** 2));
+        for (const [c, r] of candidates) {
+          if (inGrid(c, r) && accept(c, r)) return { col: c, row: r };
+        }
+      }
+      return null;
+    }
+
+    /* One dot per time zone. Nodes sharing a zone share the dot, because the
+       data places them at the same point and spreading them out would invent
+       a geography we don't have - doing that drew Bangkok north of Chiang Mai.
+       Drift only separates different zones that round into the same cell,
+       where a one-cell nudge is a rounding-scale correction. */
+    function placeNodes(nodes) {
+      const byZone = new Map();
+
+      nodes.forEach(node => {
+        if (!TIMEZONES[node.timezone]) return;
+        if (!byZone.has(node.timezone)) byZone.set(node.timezone, []);
+        byZone.get(node.timezone).push(node);
+      });
+
+      const cells = new Map();
+
+      // Sorted so placement doesn't depend on the API's ordering.
+      [...byZone.keys()].sort().forEach(timezone => {
+        const zone = TIMEZONES[timezone];
+        let { col, row } = cellForCoords(zone.lat, zone.lon);
+
+        if (!isLand(col, row)) {
+          const land = nearestCell(col, row, SNAP_RADIUS, isLand);
+          if (land) { col = land.col; row = land.row; }
+        }
+        if (cells.has(col + ',' + row)) {
+          const free = nearestCell(col, row, MAX_DRIFT,
+            (c, r) => !cells.has(c + ',' + r) && isLand(c, r));
+          if (free) { col = free.col; row = free.row; }
+        }
+
+        const here = cells.get(col + ',' + row) || [];
+        cells.set(col + ',' + row, here.concat(
+          byZone.get(timezone).slice().sort((a, b) => a.name.localeCompare(b.name))));
+      });
+
+      return cells;
+    }
+
+    function renderMap(nodes) {
+      const cells = placeNodes(nodes);
+      let html = '';
+
+      for (let row = 0; row < MAP_ROWS; row++) {
+        for (let col = 0; col < MAP_COLS; col++) {
+          const here = cells.get(col + ',' + row);
+          let classes = HACKA_LAND[row][col] === '1' ? 'map-cell is-land' : 'map-cell';
+          let attrs = '';
+
+          if (here) {
+            classes += ' is-node';
+            if (here.length > 1) classes += ' is-stacked';
+            if (here.length > 2) classes += ' is-stacked-large';
+            const names = here.map(node => `${node.name} — ${node.location}`).join('; ');
+            attrs = ' tabindex="0" role="button"'
+              + ` data-node-ids="${escapeHtml(here.map(node => node.id).join(','))}"`
+              + ` data-tooltip="${escapeHtml(here.length > 1 ? here.length + ' nodes' : names)}"`
+              + ` aria-label="${escapeHtml(names)}"`;
+          }
+          html += `<div class="${classes}"${attrs}></div>`;
+        }
+      }
+
+      nodeMap.style.gridTemplateColumns = `repeat(${MAP_COLS}, 1fr)`;
+      nodeMap.innerHTML = html;
+      nodeMapScroll.hidden = false;
+      sizeMap();
+    }
+
+    // Dots and glow scale off the real cell width. The map stays centred
+    // until the reader scrolls it themselves.
+    function sizeMap() {
+      if (!nodeMap.clientWidth) return;
+      nodeMap.style.setProperty('--cell', (nodeMap.clientWidth / MAP_COLS) + 'px');
+
+      if (!mapScrolledByUser) {
+        mapScrollIsProgrammatic = true;
+        nodeMapScroll.scrollLeft = Math.max(0, (nodeMapScroll.scrollWidth - nodeMapScroll.clientWidth) / 2);
+        requestAnimationFrame(() => { mapScrollIsProgrammatic = false; });
+      }
+    }
+
+    function closeNodePicker() {
+      nodePicker.classList.remove('visible');
+    }
+
+    function positionNear(element, anchor) {
+      const box = anchor.getBoundingClientRect();
+      const width = element.offsetWidth;
+      const height = element.offsetHeight;
+      const left = Math.max(8, Math.min(window.innerWidth - width - 8, box.left + box.width / 2 - width / 2));
+      const below = box.bottom + 9;
+      element.style.left = left + 'px';
+      element.style.top = (below + height > window.innerHeight - 8 ? Math.max(8, box.top - height - 9) : below) + 'px';
+    }
+
+    function highlightCard(id) {
+      const card = document.getElementById('node-card-' + id);
+      if (!card) return;
+      card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      card.classList.remove('is-flashing');
+      void card.offsetWidth;
+      card.classList.add('is-flashing');
+    }
+
+    /* Touch has no hover, so the picker doubles as the preview there: one tap
+       opens it, a second tap on a row jumps to the card. With a mouse, hover
+       already previews, so a single dot goes straight to its card and only a
+       shared dot needs the picker. */
+    const CAN_HOVER = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+    function activateCell(cell) {
+      hideTooltip();
+      const nodes = cell.dataset.nodeIds.split(',').map(id => nodesById[id]).filter(Boolean);
+      if (!nodes.length) return;
+      closeNodePicker();
+
+      if (CAN_HOVER && nodes.length === 1) {
+        highlightCard(nodes[0].id);
+        return;
+      }
+      nodePicker.innerHTML = nodes.map(node => `
+        <a href="#" data-node-id="${escapeHtml(node.id)}">${escapeHtml(node.name)} ${escapeHtml(node.emoji)}
+          <span>${escapeHtml(node.location)}</span>
+        </a>`).join('');
+      nodePicker.classList.add('visible');
+      positionNear(nodePicker, cell);
+    }
+
+    if (CAN_HOVER) {
+      nodeMap.addEventListener('mouseover', event => {
+        const cell = event.target.closest('.is-node');
+        if (cell && !nodePicker.classList.contains('visible')) showTooltip(cell);
+      });
+      nodeMap.addEventListener('mouseout', event => {
+        if (event.target.closest('.is-node')) hideTooltip();
+      });
+    }
+
+    nodeMap.addEventListener('click', event => {
+      const cell = event.target.closest('.is-node');
+      if (!cell) return;
+      // Stops the page-wide tooltip handler from also acting on this click.
+      event.preventDefault();
+      event.stopPropagation();
+      activateCell(cell);
+    });
+
+    nodeMap.addEventListener('keydown', event => {
+      const cell = event.target.closest('.is-node');
+      if (!cell || (event.key !== 'Enter' && event.key !== ' ')) return;
+      event.preventDefault();
+      activateCell(cell);
+    });
+
+    nodePicker.addEventListener('click', event => {
+      const link = event.target.closest('a');
+      if (!link) return;
+      event.preventDefault();
+      closeNodePicker();
+      highlightCard(link.dataset.nodeId);
+    });
+
+    nodeMapScroll.addEventListener('scroll', () => {
+      if (!mapScrollIsProgrammatic) mapScrolledByUser = true;
+    });
+
+    window.addEventListener('resize', () => {
+      closeNodePicker();
+      sizeMap();
+    });
+
+    document.addEventListener('click', event => {
+      if (!event.target.closest('#node-picker')) closeNodePicker();
+    });
+
+    function nodeCardHtml(node) {
+      const attendeeCount = parseInt(node.attending_count, 10) || 0;
+
+      // Validate URL starts with https://
+      const safeUrl = node.url && node.url.startsWith('https://') ? escapeHtml(node.url) : '#';
+
+      const attendeeHtml = attendeeCount > 0
+        ? `<span class="attendee-count tooltip-trigger" data-tooltip="${attendeeCount}+ confirmed they are going this Thursday">${attendeeCount}+ going</span>`
+        : '';
+
+      const activityHtml = attendeeHtml
+        ? `<span class="activity-indicator">${attendeeHtml}</span>`
+        : '';
+
+      return `
+        <a href="${safeUrl}" class="button" id="node-card-${escapeHtml(node.id)}">
+          <div class="button-title">
+            <span>${escapeHtml(node.name)} ${escapeHtml(node.emoji)}</span>
+            ${activityHtml}
+          </div>
+          <div class="button-details">${escapeHtml(node.location)} · Est. ${escapeHtml(node.established)}</div>
+        </a>
+      `;
+    }
+
     // Fetch and render nodes and people from API
     async function loadData() {
       const nodesContainer = document.getElementById('nodes-container');
@@ -677,31 +1146,33 @@
           nodeMap[node.id] = node;
         });
 
-        // Render nodes
-        nodesContainer.innerHTML = data.nodes.map(node => {
-          const attendeeCount = parseInt(node.attending_count, 10) || 0;
+        nodesById = {};
+        data.nodes.forEach(node => { nodesById[node.id] = node; });
 
-          // Validate URL starts with https://
-          const safeUrl = node.url && node.url.startsWith('https://') ? escapeHtml(node.url) : '#';
+        if (HAS_MAP_DATA) {
+          // Group by the region each node's time zone falls in, largest group
+          // first so the order keeps up as the network grows.
+          const byRegion = new Map();
 
-          const attendeeHtml = attendeeCount > 0
-            ? `<span class="attendee-count tooltip-trigger" data-tooltip="${attendeeCount}+ confirmed they are going this Thursday">${attendeeCount}+ going</span>`
-            : '';
+          data.nodes.forEach(node => {
+            const zone = TIMEZONES[node.timezone];
+            const region = (zone && REGION_NAMES[zone.region]) || 'Elsewhere';
+            if (!byRegion.has(region)) byRegion.set(region, []);
+            byRegion.get(region).push(node);
+          });
 
-          const activityHtml = attendeeHtml
-            ? `<span class="activity-indicator">${attendeeHtml}</span>`
-            : '';
+          nodesContainer.innerHTML = [...byRegion.entries()]
+            .sort((a, b) => b[1].length - a[1].length || a[0].localeCompare(b[0]))
+            .map(([region, nodes]) => `
+              <div class="region-heading">${escapeHtml(region)}<span>${nodes.length}</span></div>
+              <div class="button-container">${nodes.map(nodeCardHtml).join('')}</div>
+            `).join('');
 
-          return `
-            <a href="${safeUrl}" class="button">
-              <div class="button-title">
-                <span>${escapeHtml(node.name)} ${escapeHtml(node.emoji)}</span>
-                ${activityHtml}
-              </div>
-              <div class="button-details">${escapeHtml(node.location)} · Est. ${escapeHtml(node.established)}</div>
-            </a>
-          `;
-        }).join('');
+          renderMap(data.nodes);
+        } else {
+          nodesContainer.innerHTML =
+            `<div class="button-container">${data.nodes.map(nodeCardHtml).join('')}</div>`;
+        }
 
         // Store people data for filtering
         window.peopleData = data.people;
@@ -889,7 +1360,9 @@
       if (e.target === this) closePhotoLightbox();
     });
     document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') closePhotoLightbox();
+      if (e.key !== 'Escape') return;
+      closePhotoLightbox();
+      closeNodePicker();
     });
 
     // Global tooltip
