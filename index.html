@@ -308,11 +308,24 @@
       50% { transform: scale(1.4); }
     }
 
-    /* Reads as another paragraph of the intro, so it inherits everything
-       except the accent on the node name. */
-    .nearest-note b {
+    /* Sits under the map but reads like the intro above it, so it repeats
+       the intro's alignment and muting rather than inheriting them. */
+    .nearest-note {
+      margin: 0 0 40px;
+      text-align: left;
+      opacity: 0.8;
+    }
+
+    .nearest-note a {
       color: #FFD479;
       font-weight: 500;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .nearest-note a:hover,
+    .nearest-note a:focus-visible {
+      text-decoration: underline;
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -892,11 +905,11 @@
         A network of community-run groups of indie makers / coders / designers / hardware hackers who build their own
         independent apps/startups, meeting up every Thursday for weekly co-working (and demos) all around the world.
       </p>
-      <p class="nearest-note" id="nearest-note" hidden></p>
     </div>
     <div class="node-map-scroll" hidden>
       <div class="node-map" id="node-map"></div>
     </div>
+    <p class="nearest-note" id="nearest-note" hidden></p>
     <div id="nodes-container">
       <!-- Nodes loaded dynamically from API, grouped by region -->
     </div>
@@ -1155,8 +1168,14 @@
 
       const note = document.getElementById('nearest-note');
       if (!note) return;
-      note.innerHTML = `Based on your IP, your nearest node is <b>${escapeHtml(nearest.name)}</b>.`;
+      note.innerHTML = 'Based on your IP, your nearest node is '
+        + `<a href="#">${escapeHtml(nearest.name)}</a>.`;
       note.hidden = false;
+      // Same destination as clicking the node's dot on the map.
+      note.querySelector('a').addEventListener('click', event => {
+        event.preventDefault();
+        highlightCard(nearest.id);
+      });
     }
 
     // Dots and glow scale off the real cell width. The map stays centred
