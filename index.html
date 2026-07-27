@@ -1013,26 +1013,38 @@
       return null;
     }
 
-    /* One dot per time zone. Nodes sharing a zone share the dot, because the
-       data places them at the same point and spreading them out would invent
-       a geography we don't have - doing that drew Bangkok north of Chiang Mai.
-       Drift only separates different zones that round into the same cell,
-       where a one-cell nudge is a rounding-scale correction. */
+    /* A node's own coordinates when the API has them. The time zone's
+       reference city is the fallback, which puts a node in its zone's main
+       city rather than where it is: that drew Canggu onto Sulawesi and merged
+       Bangkok, Chiang Mai and Koh Samui into one dot. */
+    function nodePosition(node) {
+      if (typeof node.lat === 'number' && typeof node.lon === 'number') {
+        return { lat: node.lat, lon: node.lon };
+      }
+      return TIMEZONES[node.timezone] || null;
+    }
+
+    /* One dot per position. Nodes at the same point still share a dot, since
+       separating them would invent a geography we don't have. Drift only
+       separates distinct positions that round into the same cell, where a
+       one-cell nudge is a rounding-scale correction. */
     function placeNodes(nodes) {
-      const byZone = new Map();
+      const byPoint = new Map();
 
       nodes.forEach(node => {
-        if (!TIMEZONES[node.timezone]) return;
-        if (!byZone.has(node.timezone)) byZone.set(node.timezone, []);
-        byZone.get(node.timezone).push(node);
+        const point = nodePosition(node);
+        if (!point) return;
+        const key = point.lat + ',' + point.lon;
+        if (!byPoint.has(key)) byPoint.set(key, { point: point, nodes: [] });
+        byPoint.get(key).nodes.push(node);
       });
 
       const cells = new Map();
 
       // Sorted so placement doesn't depend on the API's ordering.
-      [...byZone.keys()].sort().forEach(timezone => {
-        const zone = TIMEZONES[timezone];
-        let { col, row } = cellForCoords(zone.lat, zone.lon);
+      [...byPoint.keys()].sort().forEach(key => {
+        const group = byPoint.get(key);
+        let { col, row } = cellForCoords(group.point.lat, group.point.lon);
 
         if (!isLand(col, row)) {
           const land = nearestCell(col, row, SNAP_RADIUS, isLand);
@@ -1046,7 +1058,7 @@
 
         const here = cells.get(col + ',' + row) || [];
         cells.set(col + ',' + row, here.concat(
-          byZone.get(timezone).slice().sort((a, b) => a.name.localeCompare(b.name))));
+          group.nodes.slice().sort((a, b) => a.name.localeCompare(b.name))));
       });
 
       return cells;

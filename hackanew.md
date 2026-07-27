@@ -74,7 +74,13 @@ Add an entry to the `nodes` list with all of these fields:
 - `established`: the year your Node started (e.g. 2026)
 - `location`: the city (e.g. "Barcelona")
 - `timezone`: your IANA timezone name (e.g. "Europe/Madrid")
+- `lat`: your city's latitude in decimal degrees (e.g. 41.3874)
+- `lon`: your city's longitude in decimal degrees (e.g. 2.1686)
 - `signup_url`: your Node's website or signup page (must start with https://)
+
+Use the coordinates of your city centre, not your venue. They only decide where your dot sits on the world map, and the map is far too coarse to show anything finer. Right-clicking a spot in Google Maps copies its coordinates.
+
+Every field is required. An entry missing any of them is rejected and your Node won't appear.
 
 Once the Pull Request is merged, your Node will appear on hacka.network within a few minutes.
 

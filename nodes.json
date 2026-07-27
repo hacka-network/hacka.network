@@ -6,6 +6,8 @@
       "established": 2019,
       "location": "Canggu, Bali",
       "timezone": "Asia/Makassar",
+      "lat": -8.6478,
+      "lon": 115.1385,
       "signup_url": "https://hackagu.org"
     },
     {
@@ -14,6 +16,8 @@
       "established": 2022,
       "location": "Bangkok",
       "timezone": "Asia/Bangkok",
+      "lat": 13.738,
+      "lon": 100.5608,
       "signup_url": "https://hackumvit.com"
     },
     {
@@ -22,6 +26,8 @@
       "established": 2023,
       "location": "Singapore",
       "timezone": "Asia/Singapore",
+      "lat": 1.3521,
+      "lon": 103.8198,
       "signup_url": "https://www.hackapura.com/"
     },
     {
@@ -30,6 +36,8 @@
       "established": 2024,
       "location": "Chiang Mai, Thailand",
       "timezone": "Asia/Bangkok",
+      "lat": 18.7883,
+      "lon": 98.9853,
       "signup_url": "https://hackamai.com"
     },
     {
@@ -38,6 +46,8 @@
       "established": 2024,
       "location": "Shoreditch, London",
       "timezone": "Europe/London",
+      "lat": 51.5265,
+      "lon": -0.0784,
       "signup_url": "https://hackaditch.com"
     },
     {
@@ -46,6 +56,8 @@
       "established": 2024,
       "location": "Ho Chi Minh City, Vietnam",
       "timezone": "Asia/Ho_Chi_Minh",
+      "lat": 10.8231,
+      "lon": 106.6297,
       "signup_url": "https://tally.so/r/mDJ2V5"
     },
     {
@@ -54,6 +66,8 @@
       "established": 2025,
       "location": "Seoul",
       "timezone": "Asia/Seoul",
+      "lat": 37.5665,
+      "lon": 126.978,
       "signup_url": "https://hackaseoul.com"
     },
     {
@@ -62,6 +76,8 @@
       "established": 2025,
       "location": "Da Nang, Vietnam",
       "timezone": "Asia/Ho_Chi_Minh",
+      "lat": 16.0544,
+      "lon": 108.2022,
       "signup_url": "https://tally.so/r/3XXRbV"
     },
     {
@@ -70,6 +86,8 @@
       "established": 2025,
       "location": "Amsterdam",
       "timezone": "Europe/Amsterdam",
+      "lat": 52.3676,
+      "lon": 4.9041,
       "signup_url": "https://hackadam.nl/"
     },
     {
@@ -78,6 +96,8 @@
       "established": 2025,
       "location": "Lisbon",
       "timezone": "Europe/Lisbon",
+      "lat": 38.7223,
+      "lon": -9.1393,
       "signup_url": "https://hackaboa.com"
     },
     {
@@ -86,6 +106,8 @@
       "established": 2025,
       "location": "New York",
       "timezone": "America/New_York",
+      "lat": 40.7128,
+      "lon": -74.006,
       "signup_url": "https://hackayork.com/"
     },
     {
@@ -94,6 +116,8 @@
       "established": 2026,
       "location": "Valencia, Spain",
       "timezone": "Europe/Madrid",
+      "lat": 39.4699,
+      "lon": -0.3763,
       "signup_url": "https://hackalencia.com/"
     },
     {
@@ -102,6 +126,8 @@
       "established": 2026,
       "location": "Paris",
       "timezone": "Europe/Paris",
+      "lat": 48.8566,
+      "lon": 2.3522,
       "signup_url": "https://hackaris.xyz/"
     },
     {
@@ -110,6 +136,8 @@
       "established": 2026,
       "location": "Barcelona",
       "timezone": "Europe/Madrid",
+      "lat": 41.3874,
+      "lon": 2.1686,
       "signup_url": "https://hackalona.com/"
     },
     {
@@ -118,6 +146,8 @@
       "established": 2026,
       "location": "Koh Samui, Thailand",
       "timezone": "Asia/Bangkok",
+      "lat": 9.512,
+      "lon": 100.0136,
       "signup_url": "https://hackamui.com"
     },
     {
@@ -126,6 +156,8 @@
       "established": 2026,
       "location": "Taipei, Taiwan",
       "timezone": "Asia/Taipei",
+      "lat": 25.033,
+      "lon": 121.5654,
       "signup_url": "https://hackapei.com/"
     }
   ]
