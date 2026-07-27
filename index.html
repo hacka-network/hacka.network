@@ -171,6 +171,17 @@
       text-shadow: 0 0 5px #3872EC;
     }
 
+    /* Matches the amber dot on the map, so the card and the dot read as one
+       highlight rather than two unrelated accents. */
+    .button.is-nearest {
+      border-color: #FFC65C;
+    }
+
+    .button.is-nearest:hover {
+      box-shadow: 0 0 10px #F0A030, 0 0 20px #F0A030, 0 0 40px #F0A030;
+      text-shadow: 0 0 5px #F0A030;
+    }
+
     .button-title {
       font-size: 18px;
       font-weight: bold;
@@ -282,9 +293,42 @@
                   0 0 calc(var(--cell) * 3.1) rgba(56, 114, 236, 0.95);
     }
 
+    /* The node nearest the visitor. Warm against an otherwise blue map so it
+       reads without needing a legend. */
+    .map-cell.is-nearest::after {
+      background: #FFD479;
+      box-shadow: 0 0 calc(var(--cell) * 0.5) #FFC65C,
+                  0 0 calc(var(--cell) * 1.3) #F0A030,
+                  0 0 calc(var(--cell) * 2.3) rgba(240, 160, 48, 0.85);
+      animation: nearest-pulse 2.4s ease-in-out infinite;
+    }
+
+    @keyframes nearest-pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.4); }
+    }
+
+    /* Reads as another paragraph of the intro, so it inherits everything
+       except the accent on the node name. */
+    .nearest-note b {
+      color: #FFD479;
+      font-weight: 500;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .map-cell.is-nearest::after {
+        animation: none;
+      }
+    }
+
     @media (hover: hover) and (pointer: fine) {
       .map-cell.is-node:hover::after {
         transform: scale(1.6);
+      }
+
+      /* Let the hover scale win over the pulse. */
+      .map-cell.is-nearest:hover::after {
+        animation: none;
       }
     }
 
@@ -848,6 +892,7 @@
         A network of community-run groups of indie makers / coders / designers / hardware hackers who build their own
         independent apps/startups, meeting up every Thursday for weekly co-working (and demos) all around the world.
       </p>
+      <p class="nearest-note" id="nearest-note" hidden></p>
     </div>
     <div class="node-map-scroll" hidden>
       <div class="node-map" id="node-map"></div>
@@ -1094,6 +1139,26 @@
       sizeMap();
     }
 
+    /* The API resolves the caller's IP to a city and flags the closest node
+       within its cutoff. Decoration only: when it can't place the visitor no
+       node carries the flag, and the page is left exactly as it was. */
+    function highlightNearestNode(nodes) {
+      const nearest = nodes.find(node => node.nearest);
+      if (!nearest) return;
+
+      const cell = [...document.querySelectorAll('.map-cell[data-node-ids]')]
+        .find(el => el.dataset.nodeIds.split(',').includes(nearest.id));
+      if (cell) cell.classList.add('is-nearest');
+
+      const card = document.getElementById('node-card-' + nearest.id);
+      if (card) card.classList.add('is-nearest');
+
+      const note = document.getElementById('nearest-note');
+      if (!note) return;
+      note.innerHTML = `Based on your IP, your nearest node is <b>${escapeHtml(nearest.name)}</b>.`;
+      note.hidden = false;
+    }
+
     // Dots and glow scale off the real cell width. The map stays centred
     // until the reader scrolls it themselves.
     function sizeMap() {
@@ -1293,6 +1358,7 @@
             `).join('');
 
           renderMap(data.nodes);
+          highlightNearestNode(data.nodes);
         } else {
           nodesContainer.innerHTML =
             `<div class="button-container">${data.nodes.map(nodeCardHtml).join('')}</div>`;
