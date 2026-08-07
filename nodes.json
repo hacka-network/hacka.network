@@ -159,6 +159,16 @@
       "lat": 25.033,
       "lon": 121.5654,
       "signup_url": "https://hackapei.com/"
+    },
+    {
+      "name": "Hackanur",
+      "emoji": "🇮🇩",
+      "established": 2026,
+      "location": "Sanur, Bali",
+      "timezone": "Asia/Makassar",
+      "lat": -8.6878,
+      "lon": 115.2626,
+      "signup_url": "https://hackanur.com"
     }
   ]
 }
