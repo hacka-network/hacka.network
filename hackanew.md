@@ -2,6 +2,8 @@
 
 Starting a new Hacka* Node is a great way to bring together indie-makers, developers, and creators in your area. But we would like you to follow some guidelines.
 
+One requirement before you begin! You must have attended another Hacka* Node at least once yourself. This keeps the spirit and format consistent across the network, and it means you've seen first-hand how a Node works before you run one.
+
 Follow the steps below to establish your own Node as part of the global network of Hacka* events.
 
 ## 1. The Hacka* spirit
