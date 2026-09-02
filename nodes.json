@@ -169,6 +169,16 @@
       "lat": -8.6878,
       "lon": 115.2626,
       "signup_url": "https://hackanur.com"
+    },
+    {
+      "name": "Hackalouse",
+      "emoji": "🇫🇷",
+      "established": 2026,
+      "location": "Toulouse, France",
+      "timezone": "Europe/Paris",
+      "lat": 43.6045,
+      "lon": 1.444,
+      "signup_url": "https://tally.so/r/rjZg9N"
     }
   ]
 }
