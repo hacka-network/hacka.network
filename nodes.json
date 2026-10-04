@@ -179,6 +179,16 @@
       "lat": 43.6045,
       "lon": 1.444,
       "signup_url": "https://tally.so/r/rjZg9N"
+    },
+    {
+      "name": "Hackaha",
+      "emoji": "🇨🇿",
+      "established": 2026,
+      "location": "Prague",
+      "timezone": "Europe/Prague",
+      "lat": 50.0755,
+      "lon": 14.4378,
+      "signup_url": "https://hackaha.com"
     }
   ]
 }
