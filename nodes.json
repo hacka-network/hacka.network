@@ -121,16 +121,6 @@
       "signup_url": "https://hackalencia.com/"
     },
     {
-      "name": "Hackaris",
-      "emoji": "🇫🇷",
-      "established": 2026,
-      "location": "Paris",
-      "timezone": "Europe/Paris",
-      "lat": 48.8566,
-      "lon": 2.3522,
-      "signup_url": "https://hackaris.xyz/"
-    },
-    {
       "name": "Hackalona",
       "emoji": "🇪🇸",
       "established": 2026,
